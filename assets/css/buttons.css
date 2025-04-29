@@ -1,0 +1,85 @@
+.btn-primary,
+.btn-load-more,
+.newsletter-form button,
+.comment-form button,
+.form-btn,
+#backToTop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-light) 0%,
+    var(--text-action)    100%
+  );
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              background 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-load-more {
+  display: block !important;
+  margin: 2rem auto !important;
+}
+
+.btn-primary:hover,
+.btn-load-more:hover,
+.newsletter-form button:hover,
+.comment-form button:hover,
+.form-btn:hover,
+#backToTop:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  background: linear-gradient(
+    135deg,
+    var(--text-action) 0%,
+    var(--primary-light) 100%
+  );
+}
+
+.btn-primary:active,
+.btn-load-more:active,
+.newsletter-form button:active,
+.comment-form button:active,
+.form-btn:active,
+#backToTop:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.btn-load-more::after {
+  content: '→';
+  transition: margin-left 0.2s ease;
+}
+.btn-load-more:hover::after {
+  margin-left: 0.5rem;
+}
+
+#backToTop::after {
+  content: none !important;
+}
+
+#backToTop {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  display: none;
+}
+#backToTop.show {
+  display: inline-flex;
+}

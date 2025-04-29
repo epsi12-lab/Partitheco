@@ -1,0 +1,32 @@
+#mapWeatherSection {
+    display:flex; flex-wrap:wrap;
+    justify-content:center; gap:2rem;
+    max-width:1200px; margin:2rem auto;
+}
+  
+.info-block {
+    flex:1 1 400px; text-align:center;
+}
+  
+#map {
+    height:300px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1);
+}
+  
+#weatherContainer {
+    background:url('/assets/static/file-20180820-30593-1nxanpj.avif') center/cover no-repeat;
+    padding:1rem; border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    color:#180d0dd9; text-shadow:0 1px 3px rgba(0,0,0,0.5);
+    max-width:400px; margin:0 auto;
+}
+  
+#weather {
+    min-height:80px; padding:.5rem;
+    background:rgba(255,255,255,0.8);
+    border:1px solid #ccc; border-radius:4px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1);
+}
+  

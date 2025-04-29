@@ -1,0 +1,39 @@
+.main-footer {
+    position:relative; bottom:0; width:100%;
+    background: linear-gradient(135deg, var(--primary-light), var(--text-action));
+    color:#fff; padding:2rem 0;
+}
+  
+.footer-container {
+    max-width:1200px;
+    margin:0 auto;
+    display:flex; flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem; text-align:center;
+}
+
+.footer-info h2 {
+    margin:.25rem 0; font-size:1.5rem;
+    font-family: "Poppins", sans-serif;
+}
+  
+.footer-info h4,
+.footer-legal,
+.footer-credit {
+    margin:.25rem 0; font-size:.85rem; line-height:1.4;
+}
+  
+.footer-social {
+    display:flex; justify-content:center; gap:.75rem; flex-wrap:wrap;
+}
+  
+.footer-social a img {
+    width:32px; height:32px;
+    filter:brightness(0) invert(1);
+    transition:filter .2s,transform .2s;
+}
+.footer-social a:hover img {
+    filter:none; transform:scale(1.1);
+}
+  

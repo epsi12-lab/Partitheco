@@ -1,0 +1,29 @@
+@media (max-width:900px) {
+    #mapWeatherSection { flex-direction:column; align-items:center; }
+    .info-block { width:100%; max-width:600px; }
+}
+  
+@media (max-width:768px) {
+    .main_navbar { flex-direction:column; height:auto; padding:.5rem; }
+    #projectsContainer { flex-direction:column; }
+}
+  
+@media (max-width:600px) {
+    .footer-container { flex-direction:column; gap:1.5rem; }
+    #backToTop { right:1rem; }
+}
+  
+@media (max-width:480px) {
+    .btn-primary,
+    .btn-load-more,
+    .newsletter-form button,
+    .comment-form button,
+    .form-btn,
+    #backToTop {
+      width:100%; padding:.75rem; font-size:.9rem;
+    }
+    #backToTop {
+      width:2.25rem; height:2.25rem; bottom:1.5rem; right:1.5rem;
+    }
+}
+  

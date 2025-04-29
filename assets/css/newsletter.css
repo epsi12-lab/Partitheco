@@ -1,0 +1,21 @@
+.centered-section {
+    max-width: 500px;
+    margin: 2rem auto;
+    text-align: center;
+}
+  
+.newsletter-form {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+  
+.newsletter-form input {
+    flex: 1 1 250px;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+  
+
+  
