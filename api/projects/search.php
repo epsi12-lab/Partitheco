@@ -1,17 +1,28 @@
 <?php
-require_once '../../classes/Database.php';
-require_once '../../classes/Project.php';
-header('Content-Type: application/json');
+// api/projects/search.php
+header('Content-Type: application/json; charset=utf-8');
 
-$q = trim($_GET['q'] ?? '');
-$db         = new Database();
-$projectObj = new Project($db->getPDO());
+try {
+    require_once __DIR__ . '/../../classes/Database.php';
+    require_once __DIR__ . '/../../classes/Project.php';
 
-if ($q === '') {
-    // Si vide, renvoyer tous (ou retourner vide selon votre choix)
-    $projects = $projectObj->getProjects(1000, 0);
-} else {
-    $projects = $projectObj->searchProjects($q);
+    $db      = new Database();
+    $pdo     = $db->getPDO();
+    $project = new Project($pdo);
+
+    $q = trim($_GET['q'] ?? '');
+
+    if ($q === '') {
+        $results = $project->getProjects(1000, 0);
+    } else {
+        $results = $project->searchProjects($q);
+    }
+
+    echo json_encode($results);
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo json_encode([
+        'error'   => true,
+        'message' => $e->getMessage()
+    ]);
 }
-
-echo json_encode($projects);
