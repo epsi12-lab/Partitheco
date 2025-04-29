@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadAll() {
     try {
-      const resp = await fetch(`api/projects/getProjects.php?limit=1000&offset=0&lang=${lang}`);
+      const resp = await fetch(`/api/projects/getProjects.php?limit=1000&offset=0&lang=${lang}`);
       const data = await resp.json();
       render(data);
     } catch (err) {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAll();
       } else {
         try {
-          const resp = await fetch(`api/projects/search.php?q=${encodeURIComponent(q)}&lang=${lang}`);
+          const resp = await fetch(`/api/projects/search.php?q=${encodeURIComponent(q)}&lang=${lang}`);
           const data = await resp.json();
           render(data);
         } catch (err) {
