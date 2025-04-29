@@ -2,10 +2,13 @@
 // includes/footer.php
 ?>
 <footer class="main-footer">
+  <button id="backToTop" title="Haut de page">↑</button>
+
   <div class="footer-container">
 
     <div class="footer-info">
       <h2>PARTITHéCO</h2>
+      <h4>Music Scores</h4>
     </div>
 
     <div class="footer-social">
@@ -21,12 +24,22 @@
       <a href="https://twitter.com/" target="_blank" rel="noopener">
         <img src="assets/static/x-twitter-brands.svg" alt="X">
       </a>
+      <a href="https://git.unistra.fr/t" target="_blank" rel="noopener">
+        <img src="assets/static/gitlab-brands.svg" alt="Gitlab">
+      </a>
+      <a href="https://github.com/" target="_blank" rel="noopener">
+        <img src="assets/static/github-brands.svg" alt="Github">
+      </a>
+      <a href="https://discord.com/" target="_blank" rel="noopener">
+        <img src="assets/static/discord-brands.svg" alt="Discord">
+      </a>
     </div>
 
     <div class="footer-credit">
       <p>Site web réalisé par Epsilon12!</p>
       <p>&copy; <?= date("Y") ?> Partithéco. Tous droits réservés.</p>
     </div>
+    <script src="assets/js/backToTop.js"></script>
 
   </div>
 </footer>
