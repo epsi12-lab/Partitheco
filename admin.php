@@ -22,7 +22,16 @@ include 'includes/navbar.php';
 
 <main class="admin-dashboard">
   <h1>Tableau de bord - Mes projets</h1>
-  <p><a href="create.php?lang=<?= $lang ?>">Publier un nouveau projet</a></p>
+  <p style="text-align: center; margin: 2rem 0;">
+  <button
+    type="button"
+    class="btn-primary"
+    onclick="location.href='create.php?lang=<?= htmlspecialchars($lang) ?>'"
+  >
+    Publier un nouveau projet
+  </button>
+</p>
+
 
   <?php if (empty($projects)): ?>
     <p>Vous n'avez encore publié aucun projet.</p>

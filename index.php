@@ -3,51 +3,154 @@
 session_start();
 $lang = $_GET['lang'] ?? 'fr';
 
-require_once 'classes/Database.php';
-require_once 'classes/Project.php';
+require_once __DIR__ . '/classes/Database.php';
+require_once __DIR__ . '/classes/Project.php';
+require_once __DIR__ . '/classes/Subscriber.php';
 
 $db         = new Database();
-$projectObj = new Project($db->getPDO());
+$pdo        = $db->getPDO();
+$projectObj = new Project($pdo);
 $projects   = $projectObj->getProjects(5, 0);
 
-include 'includes/header.php';
-include 'includes/navbar.php';
+$successNL = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['newsletter_submit'])) {
+    $subscriber = new Subscriber($pdo);
+    $successNL  = $subscriber->insert($_POST['newsletter_email']);
+}
+
+include __DIR__ . '/includes/header.php';
+include __DIR__ . '/includes/navbar.php';
 ?>
 
 <main>
-  <!-- Container des projets -->
   <div id="projectsContainer">
+    <?php $i = 0; ?>
     <?php foreach ($projects as $project): ?>
-      <div class="project-item" style="--order: <?= $i++ ?>">
-        <?php
+      <?php
         $file    = $project['thumbnail'] ?? '';
         $ext     = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         $fileUrl = "assets/img/{$file}";
         $detail  = "project.php?id={$project['id']}&lang={$lang}";
-        ?>
+      ?>
+      <div class="project-item" style="--order: <?= $i++ ?>">
         <?php if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
-          <a href="<?= $detail ?>">
-            <img src="<?= htmlspecialchars($fileUrl) ?>" class="project-thumbnail">
+          <a href="<?= htmlspecialchars($detail) ?>">
+            <img
+              src="<?= htmlspecialchars($fileUrl) ?>"
+              alt="<?= htmlspecialchars($project['title']) ?>"
+              class="project-thumbnail">
           </a>
         <?php elseif ($ext === 'pdf'): ?>
           <a href="<?= htmlspecialchars($fileUrl) ?>" target="_blank">
-            <img src="assets/static/file-pdf-solid.svg" class="project-thumbnail pdf-icon">
+            <img
+              src="/assets/static/file-pdf-solid.svg"
+              alt="PDF : <?= htmlspecialchars($project['title']) ?>"
+              class="project-thumbnail pdf-icon">
           </a>
         <?php endif; ?>
 
-        <h3><a href="<?= $detail ?>"><?= htmlspecialchars($project['title']) ?></a></h3>
-        <p><?= nl2br(htmlspecialchars(substr($project['description'], 0, 100))) ?>…</p>
+        <h3>
+          <a href="<?= htmlspecialchars($detail) ?>">
+            <?= htmlspecialchars($project['title']) ?>
+          </a>
+        </h3>
+        <p>
+          <?= nl2br(htmlspecialchars(substr($project['description'], 0, 100))) ?>…
+        </p>
       </div>
     <?php endforeach; ?>
   </div>
 
-  <button onclick="location.href='publications.php?lang=<?= $lang ?>'">
-  Voir plus de publications
+  <button
+    type="button"
+    class="btn-load-more"
+    onclick="location.href='publications.php?lang=<?= htmlspecialchars($lang) ?>'">
+    Voir plus de publications
   </button>
+
+  <section id="mapWeatherSection">
+    <div class="info-block" id="mapContainer">
+      <h2>Où nous trouver</h2>
+      <div id="map"></div>
+    </div>
+    <div class="info-block" id="weatherContainer">
+      <h2>Météo à Strasbourg</h2>
+      <div id="weather"></div>
+    </div>
+  </section>
+
+  <section id="newsletter" class="animated-form centered-section">
+    <h2 class="fade-in-up" style="--delay:0.1s;">Newsletter</h2>
+
+    <?php if ($successNL): ?>
+      <p class="fade-in-up" style="--delay:0.2s;">Merci pour votre inscription !</p>
+    <?php else: ?>
+      <?php $delay = 0.2; ?>
+
+      <form method="post" class="newsletter-form" novalidate>
+        <div class="form-group" style="--delay:<?= $delay ?>s">
+          <input
+            type="email"
+            id="newsletterEmail"
+            name="newsletter_email"
+            placeholder=" "
+            required>
+          <label for="newsletterEmail">Votre email</label>
+          <div class="form-line"></div>
+        </div>
+
+        <?php $delay += 0.1; ?>
+        <button
+          type="submit"
+          class="form-btn btn-primary"
+          style="--delay:<?= $delay ?>s;">
+          S’abonner
+        </button>
+      </form>
+    <?php endif; ?>
+  </section>
 
 </main>
 
 <script src="assets/js/base.js"></script>
-<script src="assets/js/getProjects.js"></script>
 
-<?php include 'includes/footer.php'; ?>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const map = L.map('map').setView([48.57948, 7.76292], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+  L.marker([48.57948, 7.76292])
+   .addTo(map)
+   .bindPopup('UFR Mathématiques & Info')
+   .openPopup();
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const apiKey = '74c0731dc2204b4acce5e8ec0e5d5d02'; 
+  try {
+    const resp = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather` +
+      `?q=Strasbourg,FR&units=metric&lang=fr&appid=${apiKey}`
+    );
+    if (!resp.ok) throw new Error(`Erreur ${resp.status}`);
+    const data = await resp.json();
+    document.getElementById('weather').innerHTML = `
+      <p>
+        <strong>${data.name}</strong> : ${data.weather[0].description},
+        ${data.main.temp}&deg;C
+        <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png"
+             alt="${data.weather[0].description}">
+      </p>`;
+  } catch {
+    document.getElementById('weather')
+            .textContent = 'Météo indisponible';
+  }
+});
+</script>
+
+
+<?php include __DIR__ . '/includes/footer.php'; ?>
+<script src="assets/js/backToTop.js"></script>
