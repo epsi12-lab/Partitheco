@@ -28,8 +28,8 @@
 }
 
 .btn-load-more {
-  display: block !important;
-  margin: 2rem auto !important;
+  display: block;
+  margin: 2rem auto;
 }
 
 .btn-primary:hover,
@@ -61,7 +61,8 @@
   content: '→';
   transition: margin-left 0.2s ease;
 }
-.btn-load-more:hover::after {
+.btn-load-more:hover::after,
+#backToTop:hover::after {
   margin-left: 0.5rem;
 }
 

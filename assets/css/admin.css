@@ -21,24 +21,3 @@
     color: #fff;
 }
   
-@media (max-width:768px) {
-    .admin-dashboard table,
-    .admin-dashboard thead,
-    .admin-dashboard tbody,
-    .admin-dashboard th,
-    .admin-dashboard td,
-    .admin-dashboard tr {
-      display:block;
-    }
-    .admin-dashboard th {
-      position:absolute; top:-9999px; left:-9999px;
-    }
-    .admin-dashboard td {
-      position:relative; padding-left:50%;
-    }
-    .admin-dashboard td:before {
-      position:absolute; top:0; left:0; width:45%; padding-left:.75rem;
-      content: attr(data-label); font-weight:bold;
-    }
-}
-  

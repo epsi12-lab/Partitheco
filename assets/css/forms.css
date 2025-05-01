@@ -78,4 +78,27 @@
 .form-btn {
     margin-top: 1rem;
 }
+
+.error-summary {
+    background-color: rgba(255,0,0,0.1);
+    border-left: 4px solid red;
+    padding: 1rem;
+}
   
+.error-summary ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+  
+.error-message {
+    color: red;
+    font-size: .9rem;
+    margin-top: .25rem;
+}
+  
+.success-message {
+    background-color: rgba(0,128,0,0.1);
+    border-left: 4px solid green;
+    padding: 1rem;
+    margin-top: 1rem;
+}

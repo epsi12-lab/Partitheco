@@ -10,6 +10,10 @@
     margin: 0.5rem 0;
     box-sizing: border-box;
 }
+
+.comment-form button {
+    margin-top: 1rem;
+  }
   
 .comment-item {
     border-top: 1px solid #ddd;
