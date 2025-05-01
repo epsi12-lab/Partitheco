@@ -7,7 +7,7 @@
   <div class="footer-container">
 
     <div class="footer-info">
-      <h2>PARTITHéCO</h2>
+      <h2>PARTITHECO</h2>
       <h4>Music Scores</h4>
     </div>
 
@@ -36,10 +36,11 @@
     </div>
 
     <div class="footer-credit">
-      <p>Site web réalisé par Epsilon12!</p>
-      <p>&copy; <?= date("Y") ?> Partithéco. Tous droits réservés.</p>
+      <p><?= htmlspecialchars($t['footer']['credits']) ?></p>
+      <p>&copy; <?= date("Y") ?> Partithéco</p>
     </div>
-    <script src="assets/js/backToTop.js"></script>
 
   </div>
 </footer>
+
+<script src="/assets/js/backToTop.js"></script>
