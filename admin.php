@@ -21,14 +21,14 @@ include 'includes/navbar.php';
 ?>
 
 <main class="admin-dashboard">
-  <h1>Tableau de bord - Mes projets</h1>
+  <h1><?= htmlspecialchars($t['pages']['admin_title']) ?></h1>
   <p style="text-align: center; margin: 2rem 0;">
   <button
     type="button"
     class="btn-primary"
     onclick="location.href='create.php?lang=<?= htmlspecialchars($lang) ?>'"
   >
-    Publier un nouveau projet
+  <?= htmlspecialchars($t['pages']['create_title']) ?>
   </button>
 </p>
 
@@ -49,7 +49,7 @@ include 'includes/navbar.php';
         <tr>
           <td>
             <a href="project.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>">
-              <?= htmlspecialchars($p['title']) ?>
+              <?= htmlspecialchars($p['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
             </a>
           </td>
           <td><?= htmlspecialchars($p['date_publication']) ?></td>

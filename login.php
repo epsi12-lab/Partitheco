@@ -28,7 +28,7 @@ include 'includes/navbar.php';
 
 <main>
   <section class="animated-form contact-section">
-    <h1>Connexion</h1>
+    <h1><?= htmlspecialchars($t['nav']['login']) ?></h1>
 
     <?php if ($error): ?>
       <div class="error-summary">
@@ -61,7 +61,7 @@ include 'includes/navbar.php';
           name="password"
           placeholder=" "
           required>
-        <label for="password">Mot de passe</label>
+        <label for="password"><?= htmlspecialchars($t['form']['password']) ?> :</label>
         <div class="form-line"></div>
         <p class="error-message"></p>
       </div>
@@ -69,7 +69,7 @@ include 'includes/navbar.php';
       <?php $delay += 0.1; ?>
 
       <button type="submit" class="form-btn" style="--delay: <?= $delay ?>s">
-        Se connecter
+        <?= htmlspecialchars($t['nav']['login']) ?>
       </button>
     </form>
   </section>

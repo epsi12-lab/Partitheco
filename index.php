@@ -1,8 +1,15 @@
 <?php
 // index.php
-session_start();
-$lang = $_GET['lang'] ?? 'fr';
+session_start(); 
 
+
+$successNL = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['newsletter_submit'])) {
+    $subscriber = new Subscriber((new Database())->getPDO());
+    $successNL  = $subscriber->insert($_POST['newsletter_email']);
+}
+
+require_once __DIR__ . '/assets/locales/trad.php';
 require_once __DIR__ . '/classes/Database.php';
 require_once __DIR__ . '/classes/Project.php';
 require_once __DIR__ . '/classes/Subscriber.php';
@@ -11,12 +18,6 @@ $db         = new Database();
 $pdo        = $db->getPDO();
 $projectObj = new Project($pdo);
 $projects   = $projectObj->getProjects(5, 0);
-
-$successNL = false;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['newsletter_submit'])) {
-    $subscriber = new Subscriber($pdo);
-    $successNL  = $subscriber->insert($_POST['newsletter_email']);
-}
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
@@ -37,25 +38,25 @@ include __DIR__ . '/includes/navbar.php';
           <a href="<?= htmlspecialchars($detail) ?>">
             <img
               src="<?= htmlspecialchars($fileUrl) ?>"
-              alt="<?= htmlspecialchars($project['title']) ?>"
+              alt="<?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>"
               class="project-thumbnail">
           </a>
         <?php elseif ($ext === 'pdf'): ?>
           <a href="<?= htmlspecialchars($fileUrl) ?>" target="_blank">
             <img
               src="/assets/static/file-pdf-solid.svg"
-              alt="PDF : <?= htmlspecialchars($project['title']) ?>"
+              alt="PDF : <?= htmlspecialchars($project['title'],ENT_NOQUOTES, 'UTF-8', false) ?>"
               class="project-thumbnail pdf-icon">
           </a>
         <?php endif; ?>
 
         <h3>
           <a href="<?= htmlspecialchars($detail) ?>">
-            <?= htmlspecialchars($project['title']) ?>
+            <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
           </a>
         </h3>
         <p>
-          <?= nl2br(htmlspecialchars(substr($project['description'], 0, 100))) ?>…
+          <?= nl2br(htmlspecialchars(substr($project['description'], 0, 100,), ENT_NOQUOTES, 'UTF-8', false)) ?>…
         </p>
       </div>
     <?php endforeach; ?>
@@ -65,25 +66,33 @@ include __DIR__ . '/includes/navbar.php';
     type="button"
     class="btn-load-more"
     onclick="location.href='publications.php?lang=<?= htmlspecialchars($lang) ?>'">
-    Voir plus de publications
+    <?= htmlspecialchars($t['buttons']['load_more']) ?>
   </button>
 
   <section id="mapWeatherSection">
     <div class="info-block" id="mapContainer">
-      <h2>Où nous trouver</h2>
+      <h2>
+        <?= htmlspecialchars($t['sections']['find_us']) ?>
+      </h2>
       <div id="map"></div>
     </div>
     <div class="info-block" id="weatherContainer">
-      <h2>Météo à Strasbourg</h2>
+      <h2>
+        <?= htmlspecialchars($t['sections']['weather']) ?>
+      </h2>
       <div id="weather"></div>
     </div>
   </section>
 
   <section id="newsletter" class="animated-form centered-section">
-    <h2 class="fade-in-up" style="--delay:0.1s;">Newsletter</h2>
+    <h2 class="fade-in-up" style="--delay:0.1s;">
+      <?= htmlspecialchars($t['newsletter']['title'] ?? 'Newsletter') ?>
+    </h2>
 
     <?php if ($successNL): ?>
-      <p class="fade-in-up" style="--delay:0.2s;">Merci pour votre inscription !</p>
+      <p class="fade-in-up" style="--delay:0.2s;">
+        <?= htmlspecialchars($t['newsletter']['success']) ?>
+      </p>
     <?php else: ?>
       <?php $delay = 0.2; ?>
 
@@ -95,7 +104,9 @@ include __DIR__ . '/includes/navbar.php';
             name="newsletter_email"
             placeholder=" "
             required>
-          <label for="newsletterEmail">Votre email</label>
+          <label for="newsletterEmail">
+            <?= htmlspecialchars($t['form']['email']) ?>
+          </label>
           <div class="form-line"></div>
         </div>
 
@@ -104,7 +115,7 @@ include __DIR__ . '/includes/navbar.php';
           type="submit"
           class="form-btn btn-primary"
           style="--delay:<?= $delay ?>s;">
-          S’abonner
+          <?= htmlspecialchars($t['buttons']['subscribe']) ?>
         </button>
       </form>
     <?php endif; ?>
@@ -153,4 +164,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
-<script src="assets/js/backToTop.js"></script>

@@ -1,16 +1,7 @@
 <?php
 // project.php
-session_start();
 
-$lang = $_GET['lang'] ?? 'fr';
 require_once __DIR__ . '/assets/locales/trad.php';
-$t = loadTranslations($lang);
-
-if (!isset($_GET['id'])) {
-    die("ID de projet manquant.");
-}
-$projectId = (int) $_GET['id'];
-
 require_once __DIR__ . '/classes/Database.php';
 require_once __DIR__ . '/classes/Project.php';
 require_once __DIR__ . '/classes/Comment.php';
@@ -19,6 +10,11 @@ $db         = new Database();
 $pdo        = $db->getPDO();
 $projectObj = new Project($pdo);
 $commentObj = new Comment($pdo);
+
+if (!isset($_GET['id'])) {
+    die("ID de projet manquant.");
+}
+$projectId = (int) $_GET['id'];
 
 $project    = $projectObj->getProjectById($projectId);
 if (!$project) {
@@ -41,19 +37,37 @@ include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
 ?>
 <main class="project-detail">
-  <h1><?= htmlspecialchars($project['title']) ?></h1>
+  <h1><?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?></h1>
 
   <?php
     $dt        = new DateTime($project['date_publication']);
     $formatted = $dt->format('d/m/Y \à H\hi');
   ?>
-  <p class="project-date">Publié le <?= htmlspecialchars($formatted) ?></p>
+  <p class="project-date">
+    <?= htmlspecialchars($t['project']['published_on']) ?>
+    <?= htmlspecialchars($formatted) ?>
+  </p>
 
   <ul class="project-meta">
-    <?php if ($project['author']):   ?><li><strong>Auteur :</strong> <?= htmlspecialchars($project['author'])   ?></li><?php endif; ?>
-    <?php if ($project['arranger']): ?><li><strong>Arrangeur :</strong> <?= htmlspecialchars($project['arranger']) ?></li><?php endif; ?>
-    <?php if ($project['genre']):    ?><li><strong>Genre :</strong> <?= htmlspecialchars($project['genre'])    ?></li><?php endif; ?>
-    <?php if ($project['tonality']): ?><li><strong>Tonalité :</strong> <?= htmlspecialchars($project['tonality']) ?></li><?php endif; ?>
+    <?php if ($project['author']):   ?>
+      <li><strong><?= htmlspecialchars($t['project']['author']) ?></strong> 
+        <?= htmlspecialchars($project['author'])   ?>
+      </li>
+    <?php endif; ?>
+    <?php if ($project['arranger']): ?>
+      <li><strong><?= htmlspecialchars($t['project']['arranger']) ?></strong>
+        <?= htmlspecialchars($project['arranger']) ?>
+      </li>
+    <?php endif; ?>
+    <?php if ($project['genre']):    ?>
+      <li><strong><?= htmlspecialchars($t['project']['genre']) ?></strong>
+        <?= htmlspecialchars($project['genre'])    ?>
+      </li>
+    <?php endif; ?>
+    <?php if ($project['tonality']): ?>
+      <li><strong><?= htmlspecialchars($t['project']['tonality']) ?></strong>
+        <?= htmlspecialchars($project['tonality']) ?>
+      </li><?php endif; ?>
   </ul>
 
   <?php
@@ -64,13 +78,13 @@ include __DIR__ . '/includes/navbar.php';
         if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
           <img
             src="<?= htmlspecialchars($url) ?>"
-            alt="Image de <?= htmlspecialchars($project['title']) ?>"
+            alt="Image de <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>"
             class="project-media">
         <?php elseif ($ext === 'pdf'): ?>
           <a href="<?= htmlspecialchars($url) ?>" target="_blank">
             <img
-              src="assets/img/pdf-icon.png"
-              alt="PDF de <?= htmlspecialchars($project['title']) ?>"
+              src="assets/static/file-pdf-solid.svg"
+              alt="PDF de <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>"
               class="project-media pdf-icon">
           </a>
         <?php endif;
@@ -93,10 +107,10 @@ include __DIR__ . '/includes/navbar.php';
     <?php endif;
   endif; ?>
 
-  <p><?= nl2br(htmlspecialchars($project['description'])) ?></p>
+  <p><?= nl2br(htmlspecialchars($project['description'], ENT_NOQUOTES, 'UTF-8', false)) ?></p>
 
   <section id="commentsSection">
-    <h3>Commentaires</h3>
+    <h3><?= htmlspecialchars($t['comments']['title']) ?></h3>
 
     <?php if (empty($comments)): ?>
       <p>Aucun commentaire pour le moment.</p>
@@ -109,7 +123,7 @@ include __DIR__ . '/includes/navbar.php';
               <?= (new DateTime($cm['created_at']))->format('d/m/Y H:i') ?>
             </span>
           </p>
-          <p class="content"><?= nl2br(htmlspecialchars($cm['content'])) ?></p>
+          <p class="content"><?= nl2br(htmlspecialchars($cm['content'], ENT_NOQUOTES, 'UTF-8', false)) ?></p>
         </div>
       <?php endforeach; ?>
     <?php endif; ?>
@@ -125,7 +139,9 @@ include __DIR__ . '/includes/navbar.php';
         rows="3"
         placeholder="Votre commentaire"
         required></textarea>
-      <button name="comment_submit" type="submit">Envoyer</button>
+      <button name="comment_submit" type="submit">
+        <?= htmlspecialchars($t['comments']['submit']) ?>
+      </button>
     </form>
   </section>
 </main>

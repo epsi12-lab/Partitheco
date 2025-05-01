@@ -5,10 +5,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$lang = $_GET['lang'] ?? 'fr';
-
 require_once __DIR__ . '/assets/locales/trad.php';
-$t = loadTranslations($lang);
 
 $errors  = [];
 $success = false;
@@ -43,7 +40,7 @@ include 'includes/navbar.php';
 
 <main>
   <section class="contact-section animated-form">
-    <h1><?= htmlspecialchars($t['contact']['title']) ?></h1>
+    <h1><?= htmlspecialchars($t['pages']['contact_title']) ?></h1>
 
     <?php if ($success): ?>
       <p class="success-message"><?= htmlspecialchars($t['contact']['success']) ?></p>
@@ -74,7 +71,7 @@ include 'includes/navbar.php';
                  value="<?= htmlspecialchars($name) ?>"
                  required
                  maxlength="100">
-          <label for="name"><?= htmlspecialchars($t['contact']['name']) ?></label>
+          <label for="name"><?= htmlspecialchars($t['form']['name']) ?></label>
           <div class="form-line"></div>
           <p class="error-message"></p>
         </div>
@@ -88,7 +85,7 @@ include 'includes/navbar.php';
                  placeholder=" "
                  value="<?= htmlspecialchars($email) ?>"
                  required>
-          <label for="email"><?= htmlspecialchars($t['contact']['email']) ?></label>
+          <label for="email"><?= htmlspecialchars($t['form']['email']) ?></label>
           <div class="form-line"></div>
           <p class="error-message"></p>
         </div>
@@ -102,7 +99,7 @@ include 'includes/navbar.php';
                     placeholder=" "
                     required
                     maxlength="1000"><?= htmlspecialchars($message) ?></textarea>
-          <label for="message"><?= htmlspecialchars($t['contact']['message']) ?></label>
+          <label for="message"><?= htmlspecialchars($t['form']['message']) ?></label>
           <div class="form-line"></div>
           <p class="error-message"></p>
         </div>
@@ -110,7 +107,7 @@ include 'includes/navbar.php';
         <?php $delay += 0.1; ?>
 
         <button type="submit" class="form-btn" style="--delay: <?= $delay ?>s">
-          <?= htmlspecialchars($t['contact']['submit']) ?>
+          <?= htmlspecialchars($t['buttons']['submit']) ?>
         </button>
       </form>
     <?php endif; ?>

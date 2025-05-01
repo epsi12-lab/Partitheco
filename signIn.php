@@ -53,7 +53,9 @@ include __DIR__ . '/includes/navbar.php';
 
 <main>
   <section class="animated-form">
-    <h1 class="fade-in-up" style="--delay:0.1s;">Créer un compte</h1>
+    <h1 class="fade-in-up" style="--delay:0.1s;">
+        <?= htmlspecialchars($t['nav']['register']) ?>
+    </h1>
     <?php if ($error): ?>
       <div class="error-summary" style="max-width:400px; margin:1rem auto; color:red;">
         <?= $error ?>
@@ -70,7 +72,8 @@ include __DIR__ . '/includes/navbar.php';
           placeholder=" "
           required
           value="<?= htmlspecialchars($username) ?>">
-        <label for="username">Nom d'utilisateur</label>
+        
+        <label for="username"><?= htmlspecialchars($t['form']['name']) ?> :</label>
         <div class="form-line"></div>
       </div>
 
@@ -83,7 +86,7 @@ include __DIR__ . '/includes/navbar.php';
           placeholder=" "
           required
           value="<?= htmlspecialchars($email) ?>">
-        <label for="email">Adresse e-mail</label>
+        <label for="email"><?= htmlspecialchars($t['form']['email']) ?> :</label>
         <div class="form-line"></div>
       </div>
 
@@ -95,7 +98,7 @@ include __DIR__ . '/includes/navbar.php';
           name="password"
           placeholder=" "
           required>
-        <label for="password">Mot de passe</label>
+        <label for="password"><?= htmlspecialchars($t['form']['password']) ?> :</label>
         <div class="form-line"></div>
       </div>
 
@@ -107,14 +110,16 @@ include __DIR__ . '/includes/navbar.php';
           name="password_confirm"
           placeholder=" "
           required>
-        <label for="password_confirm">Confirmer le mot de passe</label>
+        <label for="password_confirm">
+            <?= htmlspecialchars($t['form']['password_confirm']) ?>
+        </label>
         <div class="form-line"></div>
       </div>
 
       <?php $delay += 0.1; ?>
       <div class="form-group" style="--delay:<?= $delay ?>s">
         <button type="submit" class="btn-primary form-btn">
-          S'inscrire
+            <?= htmlspecialchars($t['nav']['register']) ?>
         </button>
       </div>
     </form>

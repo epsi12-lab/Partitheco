@@ -1,8 +1,6 @@
 <?php
 // publications.php
-session_start();
-
-$lang = $_GET['lang'] ?? 'fr';
+require_once __DIR__ . '/assets/locales/trad.php';
 
 require_once __DIR__ . '/classes/Database.php';
 require_once __DIR__ . '/classes/Project.php';
@@ -11,7 +9,9 @@ include __DIR__ . '/includes/navbar.php';
 ?>
 
 <main>
-  <h1 class="fade-in-up" style="--delay:0.1s;">Publications</h1>
+  <h1 class="fade-in-up" style="--delay:0.1s; text-align:center;">
+    <?= htmlspecialchars($t['pages']['publications_title']) ?>
+  </h1>
 
   <section class="animated-form">
     <?php $delay = 0.2; ?>

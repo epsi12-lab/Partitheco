@@ -1,11 +1,12 @@
 <?php
 // create.php
-session_start();
+require_once __DIR__ . '/assets/locales/trad.php';
+
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
     exit;
 }
-$lang        = $_GET['lang'] ?? 'fr';
+
 require_once 'classes/Database.php';
 require_once 'classes/Project.php';
 
@@ -73,7 +74,7 @@ include 'includes/navbar.php';
 ?>
 <main>
   <section class="animated-form create-section">
-    <h1>Publier un nouveau projet</h1>
+    <h1><?= htmlspecialchars($t['pages']['create_title']) ?></h1>
 
     <?php if (!empty($errors)): ?>
       <div class="error-summary"><ul>
@@ -103,7 +104,7 @@ include 'includes/navbar.php';
         <textarea id="description" name="description"
                   rows="4" placeholder=" "
                   required><?= htmlspecialchars($description) ?></textarea>
-        <label for="description">Description</label>
+        <label for="description"><?= htmlspecialchars($t['form']['description']) ?> :</label>
         <div class="form-line"></div><p class="error-message"></p>
       </div>
 
@@ -147,7 +148,7 @@ include 'includes/navbar.php';
 
       <div class="form-group" style="--delay:<?= $delay ?>s">
         <input type="file" id="file" name="file" placeholder=" ">
-        <label for="file">Fichier (PDF, image…)</label>
+        <label for="file"><?= htmlspecialchars($t['form']['file']) ?> :</label>
         <div class="form-line"></div><p class="error-message"></p>
       </div>
 
@@ -162,7 +163,7 @@ include 'includes/navbar.php';
       <?php $delay += 0.1; ?>
 
       <button type="submit" class="form-btn" style="--delay:<?= $delay ?>s">
-        Publier
+        <?= htmlspecialchars($t['buttons']['publish']) ?>
       </button>
     </form>
   </section>
