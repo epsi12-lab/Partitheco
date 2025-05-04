@@ -6,12 +6,10 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 $supported = ['fr','en'];
 
-// 1) Si on vient avec un ?lang=xx valide...
 if (isset($_GET['lang']) && in_array($_GET['lang'], $supported, true)) {
     $lang = $_GET['lang'];
     $_SESSION['lang'] = $lang;
 
-    // **ON CRÉE/MISE À JOUR** du cookie pour 30 jours
     setcookie(
       'lang',
       $lang,
@@ -25,11 +23,9 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], $supported, true)) {
     );
 }
 
-// 2) Sinon on regarde si on a déjà un $_SESSION
 $lang = $_SESSION['lang'] 
          ?? ($_COOKIE['lang'] ?? 'fr');
 
-// 3) Sécurité : si jamais on trafique le cookie
 if (!in_array($lang, $supported, true)) {
     $lang = 'fr';
     $_SESSION['lang'] = 'fr';
