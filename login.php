@@ -4,10 +4,31 @@ session_start();
 require_once 'classes/Database.php';
 require_once 'classes/User.php';
 
+
+if (isset($_SESSION['user'])) {
+  header('Location: admin.php');
+  exit;
+}
+
+if (empty($_SESSION['user']) && !empty($_COOKIE['remember_user'])) {
+  require_once 'classes/Database.php';
+  require_once 'classes/User.php';
+  $db = new Database();
+  $u  = new User($db->getPDO());
+  
+  $user = $u->findByUsername($_COOKIE['remember_user']);
+  if ($user) {
+     $_SESSION['user'] = $user;
+     header('Location: admin.php');
+     exit;
+  }
+}
+
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
+    $rememberMe   = !empty($_POST['remember_me']);
 
     $db      = new Database();
     $userObj = new User($db->getPDO());
@@ -15,6 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         $_SESSION['user'] = $user;
+
+        if ($rememberMe) {
+          setcookie(
+              'remember_user',
+              $user['username'],
+              [
+                'expires'  => time() + 60*60, // 1 heure
+                'path'     => '/',
+                'secure'   => isset($_SERVER['HTTPS']),
+                'httponly' => true,
+                'samesite' => 'Lax',
+              ]
+          );
+        }
         header('Location: admin.php');
         exit;
     } else {
@@ -27,7 +62,7 @@ include 'includes/navbar.php';
 ?>
 
 <main>
-  <section class="animated-form contact-section">
+  <section class="animated-form contact-section" aria-labelledby="login-title">
     <h1><?= htmlspecialchars($t['nav']['login']) ?></h1>
 
     <?php if ($error): ?>
@@ -67,7 +102,10 @@ include 'includes/navbar.php';
       </div>
 
       <?php $delay += 0.1; ?>
-
+      <label>
+        <input type="checkbox" name="remember_me"> 
+        <?= htmlspecialchars($t['nav']['remember_me']) ?>   
+      </label>
       <button type="submit" class="form-btn" style="--delay: <?= $delay ?>s">
         <?= htmlspecialchars($t['nav']['login']) ?>
       </button>

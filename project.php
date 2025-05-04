@@ -41,11 +41,14 @@ include __DIR__ . '/includes/navbar.php';
 
   <?php
     $dt        = new DateTime($project['date_publication']);
-    $formatted = $dt->format('d/m/Y \à H\hi');
+    $fmt       = $t['project']['date_format'];
+    $formatted = $dt->format($fmt);
   ?>
   <p class="project-date">
     <?= htmlspecialchars($t['project']['published_on']) ?>
     <?= htmlspecialchars($formatted) ?>
+    — <?= htmlspecialchars($t['project']['by']) ?> 
+    <strong><?= htmlspecialchars($project['publisher']) ?></strong>
   </p>
 
   <ul class="project-meta">

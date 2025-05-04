@@ -39,7 +39,7 @@ include 'includes/navbar.php';
 ?>
 
 <main>
-  <section class="contact-section animated-form">
+  <section class="contact-section animated-form" aria-labelledby="contact-title">
     <h1><?= htmlspecialchars($t['pages']['contact_title']) ?></h1>
 
     <?php if ($success): ?>

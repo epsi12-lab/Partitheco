@@ -73,7 +73,7 @@ include 'includes/header.php';
 include 'includes/navbar.php';
 ?>
 <main>
-  <section class="animated-form create-section">
+  <section class="animated-form create-section" aria-labelledby="create-title">
     <h1><?= htmlspecialchars($t['pages']['create_title']) ?></h1>
 
     <?php if (!empty($errors)): ?>
