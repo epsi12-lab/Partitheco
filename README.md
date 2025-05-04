@@ -50,9 +50,9 @@ Le site est construit en **PHP** (sans frameworks), utilise **SQLite** via **PDO
 
 ## ⚠️ À savoir
 
-Ce projet est une preuve de concept développée dans le cadre du cours de **Programmation Web 2**
-Il peut donc contenir des imperfections, des bugs ou des limitations fonctionnelles/UI. N’hésitez pas à  remonter les éventuels problèmes !
+Ce projet est une preuve de concept développée dans le cadre du cours de **Programmation Web 2**.  
+Il peut donc contenir des imperfections, des bugs ou des limitations fonctionnelles/UI. N’hésitez pas à me faire remonter les éventuels problèmes !
 
 ---
-
+Par **TUMPA MADILA Bruce**  
 *Dernière mise à jour : 04/05/2025*
