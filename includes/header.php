@@ -28,6 +28,7 @@ require_once __DIR__ . '/../assets/locales/trad.php';
     <link rel="stylesheet" href="/assets/css/about.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="assets/js/validation.js"></script>
 
 
 </head>

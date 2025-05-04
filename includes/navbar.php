@@ -12,7 +12,7 @@ if (!isset($lang)) {
   $lang = $_SESSION['lang'] ?? ($_GET['lang'] ?? 'fr');
 }
 ?>
-<nav class="main_navbar">
+<nav class="main_navbar" role="navigation" aria-label="Main menu">
 
 
   <div class="navbar-brand">
@@ -26,7 +26,7 @@ if (!isset($lang)) {
 
   <ul class="navbar-menu">
     <li>
-      <a href="index.php?lang=<?= htmlspecialchars($lang) ?>">
+      <a href="index.php?lang=<?= $lang ?>" aria-label="<?= htmlspecialchars($t['nav']['home']) ?>">
         <?= htmlspecialchars($t['nav']['home']) ?>
       </a>
     </li>
