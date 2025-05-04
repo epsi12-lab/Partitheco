@@ -10,6 +10,7 @@ return [
     'login'        => 'Login',
     'logout'       => 'Logout',
     'register'     => 'Register',
+    'remember_me'  => 'Remember me'
   ],
 
   'sections' => [
@@ -72,6 +73,8 @@ return [
     'genre'         => 'Genre: ',
     'tonality'      => 'Tonality: ',
     'published_on'  => 'Published on: ',
+    'by'           => 'by',
+    'date_format'   => 'm/d/Y \\a\\t g:ia',
   ],
 
   'about' => [
