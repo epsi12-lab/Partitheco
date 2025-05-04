@@ -64,7 +64,12 @@ class Project {
 
     public function getProjectById(int $id) {
         $stmt = $this->pdo->prepare("
-            SELECT * FROM projects WHERE id = :id
+            SELECT
+              p.*,
+              u.username AS publisher
+            FROM projects p
+            JOIN users    u ON p.user_id = u.id
+            WHERE p.id = :id
         ");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
