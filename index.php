@@ -2,17 +2,19 @@
 // index.php
 session_start(); 
 
-
-$successNL = false;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['newsletter_submit'])) {
-    $subscriber = new Subscriber((new Database())->getPDO());
-    $successNL  = $subscriber->insert($_POST['newsletter_email']);
-}
-
 require_once __DIR__ . '/assets/locales/trad.php';
 require_once __DIR__ . '/classes/Database.php';
 require_once __DIR__ . '/classes/Project.php';
 require_once __DIR__ . '/classes/Subscriber.php';
+
+
+$successNL = false;
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newsletter_submit'])) {
+    require_once __DIR__ . '/classes/Subscriber.php';
+    $sub       = new Subscriber((new Database())->getPDO());
+    $successNL = $sub->insert($_POST['newsletter_email']);
+}
+
 
 $db         = new Database();
 $pdo        = $db->getPDO();
@@ -86,16 +88,15 @@ include __DIR__ . '/includes/navbar.php';
 
   <section id="newsletter" class="animated-form centered-section">
     <h2 class="fade-in-up" style="--delay:0.1s;">
-      <?= htmlspecialchars($t['newsletter']['title'] ?? 'Newsletter') ?>
+      <?= htmlspecialchars($t['newsletter']['title']) ?>
     </h2>
 
-    <?php if ($successNL): ?>
+    <?php if (!empty($successNL)): ?>
       <p class="fade-in-up" style="--delay:0.2s;">
         <?= htmlspecialchars($t['newsletter']['success']) ?>
       </p>
     <?php else: ?>
       <?php $delay = 0.2; ?>
-
       <form method="post" class="newsletter-form" novalidate>
         <div class="form-group" style="--delay:<?= $delay ?>s">
           <input
@@ -113,6 +114,7 @@ include __DIR__ . '/includes/navbar.php';
         <?php $delay += 0.1; ?>
         <button
           type="submit"
+          name="newsletter_submit"
           class="form-btn btn-primary"
           style="--delay:<?= $delay ?>s;">
           <?= htmlspecialchars($t['buttons']['subscribe']) ?>
