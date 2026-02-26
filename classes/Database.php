@@ -11,7 +11,7 @@ class Database {
 
     public function __construct(string $dbPath = __DIR__ . '/../db.sqlite') {
         if (isset($_ENV['DB_HOST']) && !empty($_ENV['DB_HOST'])) {
-            $dsn = "pgsql:host=" . $_ENV['DB_HOST'] . ";port=5432;dbname=" . $_ENV['DB_NAME'];
+            $dsn = "pgsql:host=" . $_ENV['DB_HOST'] . ";port=" . ($_ENV['DB_PORT'] ?? 5432) . ";dbname=" . $_ENV['DB_NAME'];
             $this->pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);
         } else {
             $this->pdo = new PDO('sqlite:' . $dbPath);
