@@ -1,0 +1,278 @@
+/* publications.css - Styles pour la page des publications */
+
+.publications-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* En-tête */
+.publications-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--color-lit-night) 0%, #2a3a54 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.publications-header h1 {
+    font-family: var(--font-family-serif);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.publications-header .subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Section recherche */
+.search-section {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.search-form-advanced .search-main {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-form-advanced .search-main input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    outline: none;
+    transition: border-color 0.3s;
+    background: var(--background);
+    color: var(--text-color);
+}
+
+.search-form-advanced .search-main input:focus {
+    border-color: var(--color-lit-gold);
+}
+
+.btn-search-main {
+    padding: 1rem 1.5rem;
+    background: var(--color-lit-night);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.btn-search-main:hover {
+    background: var(--color-lit-gold);
+}
+
+/* Grille de filtres */
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.filter-group select {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.filter-group select:focus {
+    border-color: var(--color-lit-gold);
+    outline: none;
+}
+
+/* Actions filtres */
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.btn-filter {
+    padding: 0.75rem 2rem;
+    background: var(--color-lit-night);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.btn-filter:hover {
+    background: var(--color-lit-gold);
+}
+
+.btn-reset {
+    padding: 0.75rem 2rem;
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-reset:hover {
+    border-color: var(--color-lit-accent);
+    color: var(--color-lit-accent);
+}
+
+/* Navigation rapide */
+.quick-nav {
+    margin-bottom: 2rem;
+}
+
+.quick-nav h3 {
+    font-family: var(--font-family-serif);
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.quick-nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.quick-nav-pills .pill {
+    padding: 0.5rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.quick-nav-pills .pill:hover {
+    background: var(--color-lit-night);
+    color: white;
+    border-color: var(--color-lit-night);
+}
+
+.quick-nav-pills .pill.active {
+    background: var(--color-lit-gold);
+    color: white;
+    border-color: var(--color-lit-gold);
+}
+
+/* Info résultats */
+.results-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-lit-gold);
+}
+
+.filter-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-lit-night);
+    color: white;
+    border-radius: 50px;
+    font-size: 0.85rem;
+}
+
+/* Section résultats */
+.results-section {
+    min-height: 400px;
+}
+
+/* Skeleton loading */
+.skeleton-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--border-color) 25%, var(--background) 50%, var(--border-color) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-img {
+    height: 120px;
+    margin-bottom: 1rem;
+}
+
+.skeleton-title {
+    height: 20px;
+    width: 80%;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-text {
+    height: 14px;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .publications-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .search-form-advanced .search-main {
+        flex-direction: column;
+    }
+    
+    .btn-search-main {
+        width: 100%;
+    }
+    
+    .filter-actions {
+        flex-direction: column;
+    }
+    
+    .btn-filter, .btn-reset {
+        width: 100%;
+        text-align: center;
+    }
+}

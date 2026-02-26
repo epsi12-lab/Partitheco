@@ -5,6 +5,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 $errors  = [];
@@ -14,6 +15,9 @@ $email   = $_POST['email']   ?? '';
 $message = $_POST['message'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        redirect_error('403', 'Action non autorisée (CSRF).');
+    }
     if ($name === '') {
         $errors[] = $t['contact']['error_name'];
     } elseif (strlen($name) > 100) {
@@ -43,10 +47,22 @@ include 'includes/navbar.php';
     <h1><?= htmlspecialchars($t['pages']['contact_title']) ?></h1>
 
     <?php if ($success): ?>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          showToast("<?= addslashes($t['contact']['success']) ?>", 'success');
+        });
+      </script>
       <p class="success-message"><?= htmlspecialchars($t['contact']['success']) ?></p>
     <?php else: ?>
 
       <?php if (!empty($errors)): ?>
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            <?php foreach ($errors as $err): ?>
+              showToast("<?= addslashes($err) ?>", 'error');
+            <?php endforeach; ?>
+          });
+        </script>
         <div class="error-summary">
           <ul>
             <?php foreach ($errors as $err): ?>
@@ -62,6 +78,7 @@ include 'includes/navbar.php';
             action="contact.php?lang=<?= htmlspecialchars($lang) ?>"
             method="post"
             novalidate>
+        <?php csrf_input(); ?>
 
         <div class="form-group" style="--delay: <?= $delay ?>s">
           <input type="text"

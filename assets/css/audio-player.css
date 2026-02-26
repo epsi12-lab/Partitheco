@@ -1,0 +1,255 @@
+/* Lecteur Audio Amélioré */
+.audio-player-enhanced {
+    background: linear-gradient(135deg, var(--color-lit-night) 0%, #2a3a54 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    color: white;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.audio-player-enhanced .player-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.audio-player-enhanced .player-icon {
+    font-size: 2.5rem;
+    background: var(--color-lit-gold);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-player-enhanced .player-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-family: var(--font-family-serif);
+}
+
+.audio-player-enhanced .player-info p {
+    margin: 0.25rem 0 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.audio-player-enhanced .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.audio-player-enhanced .btn-play {
+    background: var(--color-lit-gold);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.audio-player-enhanced .btn-play:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(197, 160, 89, 0.5);
+}
+
+.audio-player-enhanced .progress-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.audio-player-enhanced .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.audio-player-enhanced .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-lit-gold), #e8c87a);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.audio-player-enhanced .time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.audio-player-enhanced .volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.audio-player-enhanced .volume-slider {
+    width: 80px;
+    height: 6px;
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.audio-player-enhanced .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--color-lit-gold);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.audio-player-enhanced .btn-speed {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.audio-player-enhanced .btn-speed:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.audio-player-enhanced .btn-speed.active {
+    background: var(--color-lit-gold);
+    color: var(--color-lit-night);
+}
+
+.audio-player-enhanced .extra-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.audio-player-enhanced .speed-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.audio-player-enhanced .btn-download {
+    background: transparent;
+    border: 1px solid var(--color-lit-gold);
+    color: var(--color-lit-gold);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.audio-player-enhanced .btn-download:hover {
+    background: var(--color-lit-gold);
+    color: var(--color-lit-night);
+}
+
+/* Statistiques de téléchargement */
+.download-stats {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.download-stats .count {
+    font-weight: bold;
+    color: var(--color-lit-gold);
+}
+
+/* Version compacte pour les listes */
+.audio-player-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+}
+
+.audio-player-mini .btn-play-mini {
+    background: var(--color-lit-gold);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.audio-player-mini .mini-progress {
+    flex: 1;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.audio-player-mini .mini-progress-fill {
+    height: 100%;
+    background: var(--color-lit-gold);
+    width: 0%;
+}
+
+.audio-player-mini .mini-time {
+    font-size: 0.75rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    min-width: 70px;
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .audio-player-enhanced .player-controls {
+        flex-wrap: wrap;
+    }
+    
+    .audio-player-enhanced .volume-control {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .audio-player-enhanced .extra-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

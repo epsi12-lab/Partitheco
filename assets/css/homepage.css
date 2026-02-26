@@ -1,0 +1,474 @@
+/* ========================================
+   HOMEPAGE - Style Chantons en Église
+   ======================================== */
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--color-lit-night) 0%, #2d4a6f 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(197,160,89,0.1)" stroke-width="0.5"/></svg>') repeat;
+    opacity: 0.3;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-section h1 {
+    font-family: var(--font-family-serif);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-lit-gold);
+}
+
+.hero-section .tagline {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+/* Search Box in Hero */
+.hero-search {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hero-search input[type="text"] {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: white;
+    color: #333;
+}
+
+.hero-search input[type="text"]::placeholder {
+    color: #888;
+}
+
+.search-filters-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.search-filters-row select {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+    max-width: 180px;
+}
+
+.btn-search {
+    background: var(--color-lit-gold);
+    color: var(--color-lit-night);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1rem;
+}
+
+.btn-search:hover {
+    background: #d4af5a;
+    transform: translateY(-2px);
+}
+
+/* Navigation Liturgique par Moments */
+.moments-nav {
+    padding: 2rem 1rem;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.moments-nav h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-lit-night);
+    font-size: 1.5rem;
+}
+
+[data-theme="dark"] .moments-nav h2 {
+    color: var(--color-lit-gold);
+}
+
+.moments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.moment-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 0.8rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.moment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+.moment-card .icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Couleurs par moment liturgique */
+.moment-card.entree { background: linear-gradient(135deg, #e91e63, #c2185b); }
+.moment-card.kyrie { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+.moment-card.gloria { background: linear-gradient(135deg, #ffc107, #ffa000); color: #333; }
+.moment-card.psaume { background: linear-gradient(135deg, #4caf50, #388e3c); }
+.moment-card.acclamation { background: linear-gradient(135deg, #ff9800, #f57c00); }
+.moment-card.credo { background: linear-gradient(135deg, #2196f3, #1976d2); }
+.moment-card.offertoire { background: linear-gradient(135deg, #795548, #5d4037); }
+.moment-card.sanctus { background: linear-gradient(135deg, #673ab7, #512da8); }
+.moment-card.agnus { background: linear-gradient(135deg, #00bcd4, #0097a7); }
+.moment-card.communion { background: linear-gradient(135deg, #8e2424, #6d1b1b); }
+.moment-card.envoi { background: linear-gradient(135deg, #607d8b, #455a64); }
+.moment-card.marie { background: linear-gradient(135deg, #3f51b5, #303f9f); }
+
+/* Section Calendrier Liturgique */
+.calendar-section {
+    padding: 2.5rem 1rem;
+    background: linear-gradient(180deg, var(--background) 0%, rgba(197,160,89,0.05) 100%);
+}
+
+.calendar-section h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--color-lit-night);
+}
+
+[data-theme="dark"] .calendar-section h2 {
+    color: var(--color-lit-gold);
+}
+
+.calendar-section .subtitle {
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+}
+
+
+.calendar-cards {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.calendar-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 280px;
+    max-width: 320px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--color-lit-gold);
+    transition: all 0.3s;
+}
+
+.calendar-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.calendar-card .date {
+    font-size: 0.85rem;
+    color: var(--color-lit-gold);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-card .title {
+    font-family: var(--font-family-serif);
+    font-size: 1.1rem;
+    color: var(--color-lit-night);
+    margin-bottom: 0.5rem;
+}
+
+[data-theme="dark"] .calendar-card .title {
+    color: var(--text-color);
+}
+
+.calendar-card .temps {
+    display: inline-block;
+    background: var(--color-lit-night);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-bottom: 0.8rem;
+}
+
+.calendar-card .btn-voir {
+    display: inline-block;
+    color: var(--color-lit-accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.calendar-card .btn-voir:hover {
+    text-decoration: underline;
+}
+
+/* Chant du Jour */
+.chant-jour {
+    background: var(--color-lit-night);
+    color: white;
+    padding: 2.5rem 1rem;
+    text-align: center;
+}
+
+.chant-jour h2 {
+    color: var(--color-lit-gold);
+    margin-bottom: 1.5rem;
+}
+
+.chant-jour-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.chant-jour-card .titre {
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.chant-jour-card .auteur {
+    opacity: 0.8;
+    margin-bottom: 1rem;
+}
+
+.chant-jour-card .moment-tag {
+    display: inline-block;
+    background: var(--color-lit-gold);
+    color: var(--color-lit-night);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.btn-ecouter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: var(--color-lit-night);
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-right: 0.5rem;
+}
+
+.btn-ecouter:hover {
+    background: var(--color-lit-gold);
+    transform: scale(1.05);
+}
+
+.btn-voir-partition {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-voir-partition:hover {
+    background: white;
+    color: var(--color-lit-night);
+}
+
+/* Section Dernières Publications */
+.publications-section {
+    padding: 2.5rem 1rem;
+    background: var(--background);
+}
+
+.publications-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-lit-night);
+}
+
+[data-theme="dark"] .publications-section h2 {
+    color: var(--color-lit-gold);
+}
+
+/* Section Temps Liturgiques */
+.temps-section {
+    padding: 2rem 1rem;
+    background: var(--card-bg);
+}
+
+.temps-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-lit-night);
+}
+
+[data-theme="dark"] .temps-section h2 {
+    color: var(--color-lit-gold);
+}
+
+.temps-grid {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.temps-card {
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.temps-card:hover {
+    transform: scale(1.05);
+}
+
+.temps-card.avent { background: #7b1fa2; }
+.temps-card.noel { background: #c62828; }
+.temps-card.careme { background: #5d4037; }
+.temps-card.paques { background: #ffc107; color: #333; }
+.temps-card.ordinaire { background: #388e3c; }
+
+/* Stats Section */
+.stats-section {
+    background: linear-gradient(135deg, var(--color-lit-night) 0%, #2d4a6f 100%);
+    color: white;
+    padding: 2rem 1rem;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item .number {
+    font-family: var(--font-family-serif);
+    font-size: 2.5rem;
+    color: var(--color-lit-gold);
+    display: block;
+}
+
+.stat-item .label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .moments-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .moment-card {
+        padding: 1rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .moment-card .icon {
+        font-size: 1.5rem;
+    }
+    
+    .calendar-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stats-grid {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .moments-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-filters-row select {
+        min-width: 100%;
+    }
+}

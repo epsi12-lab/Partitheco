@@ -81,8 +81,116 @@ return [
     'title' => 'À propos',
   ],
 
+  'homepage' => [
+    'tagline' => 'Votre bibliothèque de partitions liturgiques',
+    'search_placeholder' => 'Rechercher un chant par titre, auteur...',
+    'moment_label' => 'Moment de la messe',
+    'temps_label' => 'Temps liturgique',
+    'search_btn' => 'Rechercher',
+    'browse_moments' => 'Parcourir par moment de la célébration',
+    'song_of_day' => 'Chant du jour',
+    'view_score' => 'Voir la partition',
+    'prepare_celebrations' => 'Préparer les prochaines célébrations',
+    'current_season' => 'Temps liturgique actuel',
+    'see_songs' => 'Voir les chants',
+    'browse_seasons' => 'Parcourir par temps liturgique',
+    'latest_publications' => 'Dernières publications',
+    'see_all' => 'Voir toutes les publications',
+    'stats_title' => 'Partithéco en chiffres',
+    'stats_scores' => 'Partitions',
+    'stats_moments' => 'Moments liturgiques',
+    'stats_seasons' => 'Temps liturgiques',
+    'newsletter_title' => 'Restez informé',
+    'newsletter_desc' => 'Recevez les nouvelles partitions et suggestions pour les prochaines célébrations.',
+  ],
+
+  'publications' => [
+    'title' => 'Bibliothèque de Partitions',
+    'subtitle' => 'Explorez notre collection de chants liturgiques',
+    'all_moments' => 'Tous les moments',
+    'all_seasons' => 'Tous les temps',
+    'all_voices' => 'Toutes les voix',
+    'apply_filters' => 'Appliquer les filtres',
+    'reset' => 'Réinitialiser',
+    'quick_access' => 'Accès rapide par moment',
+    'results_for' => 'Résultats pour',
+  ],
+
   'footer' => [
     'credits'        => 'Site web réalisé par Epsilon12!'
+  ],
+
+  'admin' => [
+    'title' => 'Titre',
+    'edit' => 'Modifier',
+    'delete' => 'Supprimer',
+    'delete_confirm' => 'Supprimer cette liste ?',
+    'my_publications' => 'Mes publications',
+    'my_playlists' => 'Mes listes de chants',
+    'create_playlist' => 'Créer une liste',
+  ],
+
+  'playlist' => [
+    'my_list' => 'Ma Liste',
+    'search_partition' => 'Rechercher une partition (titre ou auteur)',
+    'note_label' => 'Note (tonalité, remarques…)',
+    'add' => 'Ajouter',
+    'add_to_list' => 'Ajouter à la liste',
+    'remove' => 'Retirer',
+    'remove_confirm' => 'Retirer ce chant de la liste ?',
+    'print' => 'Imprimer',
+    'export' => 'Exporter',
+    'import' => 'Importer',
+    'import_title' => 'Importer une playlist',
+    'import_desc' => 'Sélectionnez un fichier JSON exporté depuis Partithéco.',
+    'cancel' => 'Annuler',
+    'generate_share' => 'Générer un lien de partage',
+    'copy' => 'Copier',
+    'link_copied' => 'Lien copié !',
+    'import_success' => 'Import terminé',
+    'songs_added' => 'chant(s) ajouté(s)',
+    'not_found' => 'non trouvé(s)',
+    'no_songs' => 'Aucun chant dans cette liste pour le moment.',
+    'moment' => 'Moment',
+    'temps' => 'Temps',
+  ],
+
+  'rating' => [
+    'your_rating' => 'Votre note',
+    'not_rated' => 'Pas encore noté',
+    'reviews' => 'avis',
+  ],
+
+  'favorites' => [
+    'add' => 'Ajouter aux favoris',
+    'remove' => 'Retirer des favoris',
+  ],
+
+  'create' => [
+    'title_label' => 'Titre',
+    'author_label' => 'Auteur',
+    'arranger_label' => 'Arrangeur',
+    'genre_label' => 'Genre',
+    'tonality_label' => 'Tonalité',
+    'moment_label' => 'Moment de la Messe',
+    'temps_label' => 'Temps Liturgique',
+    'voix_label' => 'Type de voix',
+    'liturgical_label' => 'Chant Liturgique',
+    'media_label' => 'Vidéo / Audio',
+    'unknown_author' => 'Auteur inconnu',
+  ],
+
+  'calendar' => [
+    'title' => 'Calendrier Liturgique',
+    'sunday' => 'Dimanche',
+    'see_songs' => 'Voir les chants suggérés',
+  ],
+
+  'livrets' => [
+    'title' => 'Livrets Mensuels',
+    'generate' => 'Générer le livret',
+    'download' => 'Télécharger',
+    'print' => 'Imprimer',
   ],
 
   'errors' => [

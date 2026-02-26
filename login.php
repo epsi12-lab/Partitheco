@@ -1,8 +1,9 @@
 <?php
 // login.php
 session_start();
-require_once 'classes/Database.php';
-require_once 'classes/User.php';
+require_once __DIR__ . '/bootstrap.php';
+use App\Database;
+use App\User;
 
 
 if (isset($_SESSION['user'])) {
@@ -11,8 +12,6 @@ if (isset($_SESSION['user'])) {
 }
 
 if (empty($_SESSION['user']) && !empty($_COOKIE['remember_user'])) {
-  require_once 'classes/Database.php';
-  require_once 'classes/User.php';
   $db = new Database();
   $u  = new User($db->getPDO());
   
@@ -26,6 +25,9 @@ if (empty($_SESSION['user']) && !empty($_COOKIE['remember_user'])) {
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        redirect_error('403', 'Action non autorisée (CSRF).');
+    }
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $rememberMe   = !empty($_POST['remember_me']);
@@ -74,6 +76,7 @@ include 'includes/navbar.php';
     <?php $delay = 0.1; ?>
 
     <form action="login.php" method="post" novalidate>
+      <?php csrf_input(); ?>
 
       <div class="form-group" style="--delay: <?= $delay ?>s">
         <input

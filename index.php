@@ -1,91 +1,255 @@
 <?php
-// index.php
+// index.php - Page d'accueil Partithéco (Style Chantons en Église)
 session_start(); 
 
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
-require_once __DIR__ . '/classes/Database.php';
-require_once __DIR__ . '/classes/Project.php';
-require_once __DIR__ . '/classes/Subscriber.php';
 
+use App\Database;
+use App\Project;
+use App\Subscriber;
 
+// Newsletter
 $successNL = false;
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newsletter_submit'])) {
-    require_once __DIR__ . '/classes/Subscriber.php';
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        redirect_error('403', 'Action non autorisée (CSRF).');
+    }
     $sub       = new Subscriber((new Database())->getPDO());
     $successNL = $sub->insert($_POST['newsletter_email']);
 }
 
-
 $db         = new Database();
 $pdo        = $db->getPDO();
 $projectObj = new Project($pdo);
-$projects   = $projectObj->getProjects(5, 0);
+
+// Dernières publications
+$projects = $projectObj->getProjects(6, 0);
+
+// Chant du jour (aléatoire parmi les publications)
+$allProjects = $projectObj->getProjects(100, 0);
+$chantDuJour = !empty($allProjects) ? $allProjects[array_rand($allProjects)] : null;
+
+// Suggestions pour dimanche prochain
+try {
+    $season = \App\LiturgicalCalendar::nextSundaySeason();
+    $suggestions = $projectObj->getByTemps($season, 4);
+} catch (\Throwable $e) {
+    $season = 'Ordinaire';
+    $suggestions = [];
+}
+
+// Prochains dimanches
+$prochainsDimanches = [];
+$today = new DateTime();
+for ($i = 0; $i < 3; $i++) {
+    $sunday = clone $today;
+    $sunday->modify('next sunday');
+    $sunday->modify("+{$i} week");
+    $prochainsDimanches[] = [
+        'date' => $sunday->format('d/m/Y'),
+        'jour' => $sunday->format('l'),
+        'temps' => $season
+    ];
+}
+
+// Statistiques
+$totalPartitions = count($allProjects);
+
+// Moments de la messe
+$moments = [
+    ['slug' => 'entree', 'nom' => 'Entrée', 'icon' => '🚪'],
+    ['slug' => 'kyrie', 'nom' => 'Kyrie', 'icon' => '🙏'],
+    ['slug' => 'gloria', 'nom' => 'Gloria', 'icon' => '✨'],
+    ['slug' => 'psaume', 'nom' => 'Psaume', 'icon' => '📖'],
+    ['slug' => 'acclamation', 'nom' => 'Acclamation', 'icon' => '🎵'],
+    ['slug' => 'credo', 'nom' => 'Credo', 'icon' => '✝️'],
+    ['slug' => 'offertoire', 'nom' => 'Offertoire', 'icon' => '🍞'],
+    ['slug' => 'sanctus', 'nom' => 'Sanctus', 'icon' => '👼'],
+    ['slug' => 'agnus', 'nom' => 'Agnus Dei', 'icon' => '🐑'],
+    ['slug' => 'communion', 'nom' => 'Communion', 'icon' => '🍷'],
+    ['slug' => 'envoi', 'nom' => 'Envoi', 'icon' => '🕊️'],
+    ['slug' => 'marie', 'nom' => 'Chants à Marie', 'icon' => '💙'],
+];
+
+// Temps liturgiques
+$tempsLiturgiques = [
+    ['slug' => 'avent', 'nom' => 'Avent'],
+    ['slug' => 'noel', 'nom' => 'Noël'],
+    ['slug' => 'careme', 'nom' => 'Carême'],
+    ['slug' => 'paques', 'nom' => 'Pâques'],
+    ['slug' => 'ordinaire', 'nom' => 'Temps Ordinaire'],
+];
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
 ?>
 
 <main>
-  <div id="projectsContainer">
-    <?php $i = 0; ?>
-    <?php foreach ($projects as $project): ?>
-      <?php
-        $file    = $project['thumbnail'] ?? '';
-        $ext     = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-        $fileUrl = "assets/img/{$file}";
-        $detail  = "project.php?id={$project['id']}&lang={$lang}";
-      ?>
-      <div class="project-item" style="--order: <?= $i++ ?>">
-        <?php if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
-          <a href="<?= htmlspecialchars($detail) ?>">
-            <img
-              src="<?= htmlspecialchars($fileUrl) ?>"
-              alt="<?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>"
-              class="project-thumbnail">
-          </a>
-        <?php elseif ($ext === 'pdf'): ?>
-          <a href="<?= htmlspecialchars($fileUrl) ?>" target="_blank">
-            <img
-              src="/assets/static/file-pdf-solid.svg"
-              alt="PDF : <?= htmlspecialchars($project['title'],ENT_NOQUOTES, 'UTF-8', false) ?>"
-              class="project-thumbnail pdf-icon">
-          </a>
-        <?php endif; ?>
-
-        <h3>
-          <a href="<?= htmlspecialchars($detail) ?>">
-            <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
-          </a>
-        </h3>
-        <p>
-          <?= nl2br(htmlspecialchars(substr($project['description'], 0, 100,), ENT_NOQUOTES, 'UTF-8', false)) ?>…
-        </p>
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Partithéco</h1>
+      <p class="tagline">Votre bibliothèque de partitions liturgiques</p>
+      
+      <div class="hero-search">
+        <form action="publications.php" method="get">
+          <input type="hidden" name="lang" value="<?= htmlspecialchars($lang) ?>">
+          <input type="text" name="q" placeholder="Rechercher un chant par titre, auteur...">
+          
+          <div class="search-filters-row">
+            <select name="moment">
+              <option value="">Moment de la messe</option>
+              <?php foreach ($moments as $m): ?>
+                <option value="<?= $m['slug'] ?>"><?= $m['nom'] ?></option>
+              <?php endforeach; ?>
+            </select>
+            
+            <select name="temps">
+              <option value="">Temps liturgique</option>
+              <?php foreach ($tempsLiturgiques as $temps): ?>
+                <option value="<?= $temps['slug'] ?>"><?= $temps['nom'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn-search">🔍 Rechercher</button>
+        </form>
       </div>
-    <?php endforeach; ?>
-  </div>
-
-  <button
-    type="button"
-    class="btn-load-more"
-    onclick="location.href='publications.php?lang=<?= htmlspecialchars($lang) ?>'">
-    <?= htmlspecialchars($t['buttons']['load_more']) ?>
-  </button>
-
-  <section id="mapWeatherSection">
-    <div class="info-block" id="mapContainer">
-      <h2>
-        <?= htmlspecialchars($t['sections']['find_us']) ?>
-      </h2>
-      <div id="map"></div>
-    </div>
-    <div class="info-block" id="weatherContainer">
-      <h2>
-        <?= htmlspecialchars($t['sections']['weather']) ?>
-      </h2>
-      <div id="weather"></div>
     </div>
   </section>
 
+  <!-- NAVIGATION PAR MOMENTS LITURGIQUES -->
+  <section class="moments-nav">
+    <h2>Parcourir par moment de la célébration</h2>
+    <div class="moments-grid">
+      <?php foreach ($moments as $m): ?>
+        <a href="publications.php?moment=<?= $m['slug'] ?>&lang=<?= $lang ?>" class="moment-card <?= $m['slug'] ?>">
+          <span class="icon"><?= $m['icon'] ?></span>
+          <span><?= $m['nom'] ?></span>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </section>
+
+  <!-- CHANT DU JOUR -->
+  <?php if ($chantDuJour): ?>
+  <section class="chant-jour">
+    <h2>🎶 Chant du jour</h2>
+    <div class="chant-jour-card">
+      <div class="titre"><?= htmlspecialchars($chantDuJour['title']) ?></div>
+      <div class="auteur"><?= htmlspecialchars($chantDuJour['author'] ?? 'Auteur inconnu') ?></div>
+      <div class="moment-tag">Partition</div>
+      <div>
+        <a href="project.php?id=<?= $chantDuJour['id'] ?>&lang=<?= $lang ?>" class="btn-voir-partition">
+          📄 Voir la partition
+        </a>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
+
+  <!-- CALENDRIER LITURGIQUE -->
+  <section class="calendar-section">
+    <h2>📅 Préparer les prochaines célébrations</h2>
+    <p class="subtitle">Temps liturgique actuel : <strong><?= htmlspecialchars($season) ?></strong></p>
+    
+    <div class="calendar-cards">
+      <?php foreach ($prochainsDimanches as $dim): ?>
+        <div class="calendar-card">
+          <div class="date"><?= $dim['date'] ?></div>
+          <div class="title">Dimanche</div>
+          <span class="temps"><?= htmlspecialchars($dim['temps']) ?></span>
+          <div>
+            <a href="publications.php?temps=<?= strtolower($dim['temps']) ?>&lang=<?= $lang ?>" class="btn-voir">
+              Voir les chants suggérés →
+            </a>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </section>
+
+  <!-- TEMPS LITURGIQUES -->
+  <section class="temps-section">
+    <h2>Explorer par temps liturgique</h2>
+    <div class="temps-grid">
+      <?php foreach ($tempsLiturgiques as $temps): ?>
+        <a href="publications.php?temps=<?= $temps['slug'] ?>&lang=<?= $lang ?>" class="temps-card <?= $temps['slug'] ?>">
+          <?= $temps['nom'] ?>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </section>
+
+  <!-- DERNIÈRES PUBLICATIONS -->
+  <section class="publications-section">
+    <h2>📚 Dernières partitions ajoutées</h2>
+    <div id="projectsContainer">
+      <?php $i = 0; ?>
+      <?php foreach ($projects as $project): ?>
+        <?php
+          $file    = $project['thumbnail'] ?? '';
+          $ext     = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+          $fileUrl = "assets/img/{$file}";
+          $detail  = "project.php?id={$project['id']}&lang={$lang}";
+        ?>
+        <div class="project-item" style="--order: <?= $i++ ?>">
+          <?php if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
+            <a href="javascript:void(0)" onclick="openLightbox('<?= htmlspecialchars($fileUrl) ?>')">
+              <img
+                src="<?= htmlspecialchars($fileUrl) ?>"
+                alt="<?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>"
+                class="project-thumbnail">
+            </a>
+          <?php elseif ($ext === 'pdf'): ?>
+            <a href="javascript:void(0)" onclick="openPDF('<?= htmlspecialchars($fileUrl) ?>')">
+              <img
+                src="/assets/static/file-pdf-solid.svg"
+                alt="PDF : <?= htmlspecialchars($project['title'],ENT_NOQUOTES, 'UTF-8', false) ?>"
+                class="project-thumbnail pdf-icon">
+            </a>
+          <?php endif; ?>
+
+          <h3>
+            <a href="<?= htmlspecialchars($detail) ?>">
+              <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
+            </a>
+          </h3>
+          <p>
+            <?= nl2br(htmlspecialchars(substr($project['description'], 0, 80), ENT_NOQUOTES, 'UTF-8', false)) ?>…
+          </p>
+        </div>
+      <?php endforeach; ?>
+    </div>
+
+    <button
+      type="button"
+      class="btn-load-more"
+      onclick="location.href='publications.php?lang=<?= htmlspecialchars($lang) ?>'">
+      Voir toutes les partitions →
+    </button>
+  </section>
+
+  <!-- STATISTIQUES -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="number"><?= $totalPartitions ?></span>
+        <span class="label">Partitions disponibles</span>
+      </div>
+      <div class="stat-item">
+        <span class="number"><?= count($moments) ?></span>
+        <span class="label">Moments liturgiques</span>
+      </div>
+      <div class="stat-item">
+        <span class="number"><?= count($tempsLiturgiques) ?></span>
+        <span class="label">Temps liturgiques</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
   <section id="newsletter" class="animated-form centered-section">
     <h2 class="fade-in-up" style="--delay:0.1s;">
       <?= htmlspecialchars($t['newsletter']['title']) ?>
@@ -98,6 +262,7 @@ include __DIR__ . '/includes/navbar.php';
     <?php else: ?>
       <?php $delay = 0.2; ?>
       <form method="post" class="newsletter-form" novalidate>
+        <?php csrf_input(); ?>
         <div class="form-group" style="--delay:<?= $delay ?>s">
           <input
             type="email"
@@ -126,43 +291,5 @@ include __DIR__ . '/includes/navbar.php';
 </main>
 
 <script src="assets/js/base.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const map = L.map('map').setView([48.57948, 7.76292], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
-  L.marker([48.57948, 7.76292])
-   .addTo(map)
-   .bindPopup('UFR Mathématiques & Info')
-   .openPopup();
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const apiKey = '74c0731dc2204b4acce5e8ec0e5d5d02'; 
-  try {
-    const resp = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather` +
-      `?q=Strasbourg,FR&units=metric&lang=fr&appid=${apiKey}`
-    );
-    if (!resp.ok) throw new Error(`Erreur ${resp.status}`);
-    const data = await resp.json();
-    document.getElementById('weather').innerHTML = `
-      <p>
-        <strong>${data.name}</strong> : ${data.weather[0].description},
-        ${data.main.temp}&deg;C
-        <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png"
-             alt="${data.weather[0].description}">
-      </p>`;
-  } catch {
-    document.getElementById('weather')
-            .textContent = 'Météo indisponible';
-  }
-});
-</script>
-
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

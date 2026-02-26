@@ -1,0 +1,40 @@
+{
+  "name": "Partithéco",
+  "short_name": "Partithéco",
+  "description": "Votre bibliothèque de partitions liturgiques",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#f9f7f2",
+  "theme_color": "#1a2a44",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "education", "lifestyle"],
+  "lang": "fr",
+  "dir": "ltr",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Publications",
+      "url": "/publications.php",
+      "icon": "/assets/img/icon-192.png"
+    },
+    {
+      "name": "Calendrier",
+      "url": "/calendrier.php",
+      "icon": "/assets/img/icon-192.png"
+    }
+  ]
+}

@@ -1,127 +1,504 @@
-@media (max-width: 1024px) {
-    .project-item {
-      flex: 1 1 calc(50% - 1rem) !important;
-      max-width: calc(50% - 1rem) !important;
+/* ========================================
+   RESPONSIVE DESIGN - Partitheco
+   ======================================== */
+
+/* === LARGE TABLETS & SMALL DESKTOPS === */
+@media (max-width: 1200px) {
+    .moments-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .temps-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
     }
 }
-  
-@media (max-width: 768px) {
+
+@media (max-width: 1024px) {
     .project-item {
-      flex: 1 1 100% !important;
-      max-width: 100% !important;
+        flex: 1 1 calc(50% - 1rem) !important;
+        max-width: calc(50% - 1rem) !important;
     }
+    .hero-section {
+        padding: 3rem 1.5rem !important;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem !important;
+    }
+    .moments-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+    .calendar-cards {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .calendar-card {
+        width: 100% !important;
+        max-width: 400px !important;
+    }
+}
+
+/* === TABLETS === */
+@media (max-width: 768px) {
+    /* Projects */
+    .project-item {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Navbar */
     .main_navbar {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      height: auto;
-      padding: .5rem;
-      position: relative;
-      padding-bottom: 4rem; 
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        height: 10vh;
+        min-height: 150px;
+        padding: 0;
+        position: relative;
     }
     .navbar-menu {
-      position: absolute !important;
-      transform: none !important;
-      flex-direction: column !important;
-      padding: .5rem !important;
-      border-radius: 4px !important;
-      margin-top: .1rem !important;
-      left: auto !important;
-      right: 1rem !important;
-      display: flex !important;
-      justify-content: flex-end !important;
-      margin: 1rem !important;
-      align-self: flex-end !important;
-      bottom: 1rem !important;
-      gap: 0.1rem !important;
-      max-height: 80vh !important;
-      overflow-y: auto !important;
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: auto !important;
+        width: 100% !important;
+        max-width: none !important;
+        flex-direction: column !important;
+        background: var(--card-bg) !important;
+        padding: 1rem !important;
+        margin: 0 !important;
+        transform: none !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+        z-index: 1001 !important;
+    }
+    .navbar-menu.active {
+        display: flex !important;
+    }
+    .navbar-menu li {
+        width: 100%;
+        text-align: left;
+    }
+    .navbar-menu li a {
+        color: var(--text-color) !important;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .navbar-menu .dropdown-content {
+        position: static !important;
+        display: block !important;
+        box-shadow: none !important;
+        padding-left: 1.5rem !important;
+        background: transparent !important;
+    }
+    .burger-menu {
+        display: block !important;
+    }
+    .navbar-brand {
+        margin-bottom: 0.5rem !important;
     }
     .navbar-lang {
-      position: absolute !important;
-      align-self: flex-end;
-      margin: 0 !important;
-      bottom: 1rem;
-      right: 1rem;
-      display: flex;
-      gap: 0.1rem;  
+        margin-bottom: 0.5rem !important;
     }
     .navbar-brand .navbar-logo {
         max-height: 100px;
     }
+    
+    /* Media */
     .project-media,
     audio.project-media,
     video.project-media {
-      max-width: 90vw !important;
+        max-width: 90vw !important;
     }
-}
-
-@media (max-width: 768px) {
+    
+    /* Hero Section */
+    .hero-section {
+        padding: 2rem 1rem !important;
+        min-height: auto !important;
+    }
+    .hero-section h1 {
+        font-size: 2rem !important;
+    }
+    .hero-section .tagline {
+        font-size: 1rem !important;
+    }
+    .hero-search {
+        max-width: 100% !important;
+    }
+    .search-filters-row {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+    .search-filters-row select {
+        width: 100% !important;
+    }
+    
+    /* Moments Grid */
+    .moments-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    .moment-card {
+        padding: 0.75rem !important;
+        font-size: 0.85rem !important;
+    }
+    .moment-card .icon {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Temps liturgiques */
+    .temps-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Stats */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    /* Chant du jour */
+    .chant-jour-card {
+        padding: 1.5rem !important;
+    }
+    
+    /* Publications page */
+    .filters-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .quick-nav-pills {
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 0.5rem !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .quick-nav-pills .pill {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Audio Player */
+    .audio-player-enhanced {
+        padding: 1rem !important;
+    }
+    .player-controls {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+    .extra-controls {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+    .speed-controls {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+    }
+    
+    /* Admin tables */
     .admin-dashboard table,
     .admin-dashboard thead,
     .admin-dashboard tbody,
     .admin-dashboard th,
     .admin-dashboard td,
     .admin-dashboard tr {
-      display: block;
+        display: block;
     }
     .admin-dashboard th {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
     }
     .admin-dashboard td {
-      position: relative;
-      padding-left: 50%;
+        position: relative;
+        padding-left: 50%;
     }
     .admin-dashboard td:before {
-      content: attr(data-label);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 45%;
-      padding-left: .75rem;
-      font-weight: bold;
+        content: attr(data-label);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 45%;
+        padding-left: .75rem;
+        font-weight: bold;
+    }
+    
+    /* Forms */
+    .animated-form {
+        padding: 1.5rem !important;
+        margin: 1rem !important;
+    }
+    .form-group {
+        margin-bottom: 1.25rem !important;
+    }
+    
+    /* Liturgical tags */
+    .liturgical-tags {
+        justify-content: center !important;
     }
 }
-  
-@media (max-width: 900px) {
-    #mapWeatherSection {
-      flex-direction: column;
-      align-items: center;
-    }
-    .info-block {
-      width: 100%;
-      max-width: 600px;
-    }
-}
-  
+
+/* === SMALL TABLETS & LARGE PHONES === */
 @media (max-width: 600px) {
+    /* Footer */
     .footer-container {
-      flex-direction: column;
-      gap: 1.5rem;
+        flex-direction: column;
+        gap: 1.5rem;
     }
     #backToTop {
-      right: 1rem;
+        right: 1rem;
+    }
+    
+    /* Moments Grid - 2 colonnes */
+    .moments-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Hero */
+    .hero-section h1 {
+        font-size: 1.75rem !important;
+    }
+    .btn-search {
+        width: 100% !important;
+    }
+    
+    /* Sections */
+    section {
+        padding: 1.5rem 1rem !important;
+    }
+    section h2 {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Calendar */
+    .calendar-card {
+        padding: 1rem !important;
+    }
+    
+    /* Newsletter */
+    .newsletter-section {
+        padding: 2rem 1rem !important;
+    }
+    .newsletter-form {
+        flex-direction: column !important;
+    }
+    .newsletter-form input,
+    .newsletter-form button {
+        width: 100% !important;
+    }
+    
+    /* Project detail */
+    .project-detail h1 {
+        font-size: 1.5rem !important;
+        flex-wrap: wrap !important;
+    }
+    .project-meta {
+        padding: 0.75rem !important;
+    }
+    
+    /* Playlist actions */
+    .add-item-form {
+        flex-direction: column !important;
+    }
+    .add-item-form .form-group,
+    .add-item-form button {
+        width: 100% !important;
     }
 }
-  
+
+/* === PHONES === */
 @media (max-width: 480px) {
+    /* Buttons */
     .btn-primary,
+    .btn-secondary,
     .btn-load-more,
     .newsletter-form button,
     .comment-form button,
-    .form-btn,
-    #backToTop {
-      width: 50%;
-      padding: .75rem;
-      font-size: .9rem;
+    .form-btn {
+        width: 100% !important;
+        padding: .75rem !important;
+        font-size: .9rem !important;
     }
+    
+    /* Back to top */
     #backToTop {
-      width: 2.25rem;
-      height: 2.25rem;
-      bottom: 1.5rem;
-      right: 1.5rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+    
+    /* Hero */
+    .hero-section {
+        padding: 1.5rem 0.75rem !important;
+    }
+    .hero-section h1 {
+        font-size: 1.5rem !important;
+    }
+    .hero-search input[type="text"] {
+        font-size: 0.9rem !important;
+        padding: 0.75rem !important;
+    }
+    
+    /* Moments - 2 colonnes compactes */
+    .moments-grid {
+        gap: 0.4rem !important;
+    }
+    .moment-card {
+        padding: 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+    .moment-card .icon {
+        font-size: 1.25rem !important;
+    }
+    .moment-card span:last-child {
+        display: none;
+    }
+    
+    /* Chant du jour */
+    .chant-jour-card .titre {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Publications filters */
+    .search-main {
+        flex-direction: column !important;
+    }
+    .search-main input,
+    .search-main button {
+        width: 100% !important;
+        border-radius: 8px !important;
+    }
+    .filter-actions {
+        flex-direction: column !important;
+    }
+    .filter-actions button,
+    .filter-actions a {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    
+    /* Quick nav pills - scroll horizontal */
+    .quick-nav-pills {
+        gap: 0.4rem !important;
+    }
+    .pill {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    /* Audio player compact */
+    .player-header {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    .player-info h4 {
+        font-size: 1rem !important;
+    }
+    .btn-speed {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    /* Comments */
+    .comment-form input,
+    .comment-form textarea {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Skeleton cards */
+    .skeleton-card {
+        min-height: 150px !important;
+    }
+}
+
+/* === VERY SMALL PHONES === */
+@media (max-width: 360px) {
+    .hero-section h1 {
+        font-size: 1.25rem !important;
+    }
+    .moments-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .moment-card {
+        padding: 0.4rem !important;
+    }
+    .temps-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .lit-tag {
+        font-size: 0.75rem !important;
+        padding: 0.3rem 0.5rem !important;
+    }
+}
+
+/* === LANDSCAPE PHONES === */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto !important;
+        padding: 1rem !important;
+    }
+    .navbar-menu {
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+    }
+}
+
+/* === PRINT STYLES === */
+@media print {
+    .navbar, .burger-menu, .newsletter-section, #backToTop, .btn-favorite, footer {
+        display: none !important;
+    }
+    .project-detail, .playlist-print {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .audio-player-enhanced {
+        display: none !important;
+    }
+}
+
+/* === TOUCH DEVICE OPTIMIZATIONS === */
+@media (hover: none) and (pointer: coarse) {
+    .moment-card:hover,
+    .project-item:hover,
+    .btn-primary:hover,
+    .lit-tag:hover {
+        transform: none !important;
+    }
+    
+    /* Larger touch targets */
+    .moment-card,
+    .pill,
+    .btn-primary,
+    .btn-secondary {
+        min-height: 44px;
+    }
+    
+    /* Remove hover effects on touch */
+    .navbar-menu li a:hover {
+        background: transparent !important;
+    }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .project-item {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
   

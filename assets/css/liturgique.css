@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap');
+
+:root {
+    /* Palette Liturgique : Bleu Nuit, Or, Blanc Cassé */
+    --color-lit-night: #1a2a44;
+    --color-lit-gold: #c5a059;
+    --color-lit-white: #f9f7f2;
+    --color-lit-accent: #8e2424; /* Un rouge liturgique pour les accents */
+    
+    --primary-light: var(--color-lit-night);
+    --text-action: var(--color-lit-accent);
+    --background: var(--color-lit-white);
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0dcd0;
+    
+    --font-family-serif: 'Playfair Display', serif;
+    --font-family-sans: 'Roboto', sans-serif;
+    --font-family: var(--font-family-sans);
+}
+
+[data-theme="dark"] {
+    --color-lit-night: #0a1424;
+    --color-lit-gold: #a68545;
+    --color-lit-white: #1a1a1a;
+    
+    --background: var(--color-lit-white);
+    --card-bg: #252525;
+    --text-color: #e0e0e0;
+    --border-color: #444444;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background);
+    color: var(--text-color);
+}
+
+h1, h2, h3, .navbar-brand {
+    font-family: var(--font-family-serif);
+    font-weight: 700;
+}
+
+.project-item {
+    border-radius: 0; /* Plus institutionnel */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.project-item h3 a {
+    color: var(--color-lit-night);
+}
+
+[data-theme="dark"] .project-item h3 a {
+    color: var(--color-lit-gold);
+}
+
+.btn-primary {
+    background-color: var(--color-lit-night);
+    border-color: var(--color-lit-night);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-lit-gold);
+    border-color: var(--color-lit-gold);
+}
+
+.search-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.search-filters .form-group {
+    flex: 1 1 200px;
+    margin-bottom: 1rem;
+}
+
+.search-filters select {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--primary-light);
+    padding: 0.8rem 0;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-color);
+    outline: none;
+    cursor: pointer;
+}
+
+.search-filters select option {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.lit-select {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--primary-light);
+    padding: 0.8rem 0;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-color);
+    outline: none;
+    cursor: pointer;
+}
+
+.lit-select option {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.btn-favorite {
+    background: none;
+    border: none;
+    color: var(--color-lit-gold);
+    font-size: 1.5rem;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: transform 0.2s;
+}
+
+.btn-favorite:hover {
+    transform: scale(1.2);
+}
+
+/* Tags liturgiques sur page de détail */
+.liturgical-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.lit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.lit-tag.moment {
+    background: linear-gradient(135deg, #e8d5b7 0%, #d4a574 100%);
+    color: #5a3e1b;
+}
+
+.lit-tag.moment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+}
+
+.lit-tag.temps {
+    background: linear-gradient(135deg, #c5d5e8 0%, #7a9cc6 100%);
+    color: #1a3a5c;
+}
+
+.lit-tag.temps:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(122, 156, 198, 0.4);
+}
+
+.lit-tag.voix {
+    background: linear-gradient(135deg, #d5e8d5 0%, #7ac67a 100%);
+    color: #1a5c1a;
+}
+
+.lit-tag.liturgical {
+    background: linear-gradient(135deg, #e8d5e8 0%, #a57ac6 100%);
+    color: #3e1a5c;
+}
+
+/* Fichier actuel dans formulaire */
+.current-file {
+    font-size: 0.85rem;
+    color: var(--color-lit-gold);
+    margin-top: 0.5rem;
+    font-style: italic;
+}

@@ -1,6 +1,11 @@
 <?php
 // classes/Subscriber.php
 
+namespace App;
+
+use PDO;
+use PDOException;
+
 class Subscriber {
     private PDO $pdo;
 

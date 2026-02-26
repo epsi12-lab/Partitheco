@@ -1,4 +1,10 @@
 <?php
+// classes/Comment.php
+
+namespace App;
+
+use PDO;
+
 class Comment {
   private PDO $pdo;
   public function __construct(PDO $pdo) { $this->pdo = $pdo; }
@@ -20,8 +26,8 @@ class Comment {
     ");
     return $stmt->execute([
       ':pid'=>$pid,
-      ':author'=>htmlspecialchars($author,ENT_QUOTES),
-      ':content'=>htmlspecialchars($content,ENT_QUOTES)
+      ':author'=>$author,
+      ':content'=>$content
     ]);
   }
 }

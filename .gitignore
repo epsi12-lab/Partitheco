@@ -1,0 +1,5 @@
+.env
+vendor/
+composer
+composer.phar
+db.sqlite

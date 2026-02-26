@@ -1,5 +1,5 @@
 <?php
-// about.php
+// about.php - Page À propos (présentation du site)
 
 require_once __DIR__ . '/assets/locales/trad.php';
 
@@ -11,39 +11,71 @@ include __DIR__ . '/includes/navbar.php';
   <section class="about-section">
 
     <h1 class="fade-in-up" style="--delay:0.1s;">
-      <?= htmlspecialchars($t['pages']['about_title']) ?>
+      <?= htmlspecialchars($t['about']['title']) ?>
     </h1>
 
-    <div class="about-profile fade-in-up" style="--delay:0.2s;">
-      <img
-        src="/assets/static/epsi12.JPG"
-        alt="Photo de Epsilon12!"
-        class="profile-photo">
-      <div class="profile-text">
-        <h2>Bonjour, je suis Epsilon12!</h2>
+    <div class="about-hero fade-in-up" style="--delay:0.2s;">
+      <div class="about-icon">🎵</div>
+      <h2>Bienvenue sur Partithéco</h2>
+      <p class="tagline">Votre bibliothèque de partitions liturgiques en ligne</p>
+    </div>
+
+    <div class="about-content fade-in-up" style="--delay:0.3s;">
+      <div class="about-card">
+        <div class="card-icon">📚</div>
+        <h3>Notre Mission</h3>
         <p>
-          Passionné de musique et de développement web, j’ai conçu PARTITHECO pour partager
-          mes partitions, mes enregistrements audio et mes vidéos. Mon objectif est de rendre
-          accessible à tous un espace où télécharger et découvrir des œuvres en un clic.
+          Partithéco est une plateforme dédiée au partage de partitions liturgiques et chorales.
+          Notre objectif est de faciliter l'accès aux ressources musicales pour les chorales,
+          les animateurs liturgiques et tous les passionnés de musique sacrée.
         </p>
+      </div>
+
+      <div class="about-card">
+        <div class="card-icon">🎶</div>
+        <h3>Nos Ressources</h3>
+        <p>
+          Découvrez une collection variée de partitions classées par moments de la messe
+          (Entrée, Kyrie, Gloria, Psaume, Communion...) et par temps liturgiques
+          (Avent, Noël, Carême, Pâques, Temps Ordinaire). Chaque partition peut être
+          accompagnée d'enregistrements audio pour faciliter l'apprentissage.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <div class="card-icon">👥</div>
+        <h3>Pour Qui ?</h3>
+        <p>
+          Que vous soyez chef de chœur, organiste, animateur liturgique ou simple choriste,
+          Partithéco vous offre les outils pour préparer vos célébrations : recherche avancée,
+          playlists personnalisées, calendrier liturgique et livrets mensuels téléchargeables.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <div class="card-icon">🌐</div>
+        <h3>Fonctionnalités</h3>
+        <ul>
+          <li>Recherche par titre, auteur, moment de la messe ou temps liturgique</li>
+          <li>Lecteur audio intégré avec contrôle de vitesse</li>
+          <li>Création de playlists pour vos célébrations</li>
+          <li>Calendrier liturgique interactif</li>
+          <li>Génération de livrets PDF</li>
+          <li>Mode hors-ligne (PWA)</li>
+        </ul>
       </div>
     </div>
 
-    <div class="project-description fade-in-up" style="--delay:0.4s;">
-      <h2>PARTITHECO</h2>
+    <div class="about-cta fade-in-up" style="--delay:0.5s;">
+      <h3>Rejoignez notre communauté</h3>
       <p>
-        PARTITHECO est une plateforme de publication de partitions de musique, accompagnées
-        d’extraits audio et de vidéos pédagogiques. Chaque utilisateur peut créer son compte,
-        déposer ses fichiers (PDF, MP3, MP4…), et les visiteurs peuvent parcourir, écouter
-        et télécharger librement les créations.
+        Créez un compte pour publier vos propres partitions, sauvegarder vos favoris
+        et organiser vos célébrations.
       </p>
-      <p>
-        Construit en PHP (SQLite + PDO), responsive et multilingue, PARTITHECO met l’accent
-        sur la simplicité d’usage, l’accessibilité et la sécurité des contenus.
-      </p>
-      <p>
-        Pour toute question ou collaboration, n’hésitez pas à nous <a href="contact.php?lang=<?= $lang ?>">contacter</a>.
-      </p>
+      <div class="cta-buttons">
+        <a href="publications.php?lang=<?= $lang ?>" class="btn-primary">Explorer les partitions</a>
+        <a href="contact.php?lang=<?= $lang ?>" class="btn-secondary">Nous contacter</a>
+      </div>
     </div>
 
   </section>

@@ -81,8 +81,116 @@ return [
     'title' => 'About',
   ],
 
+  'homepage' => [
+    'tagline' => 'Your liturgical sheet music library',
+    'search_placeholder' => 'Search for a song by title, author...',
+    'moment_label' => 'Mass moment',
+    'temps_label' => 'Liturgical season',
+    'search_btn' => 'Search',
+    'browse_moments' => 'Browse by celebration moment',
+    'song_of_day' => 'Song of the day',
+    'view_score' => 'View score',
+    'prepare_celebrations' => 'Prepare upcoming celebrations',
+    'current_season' => 'Current liturgical season',
+    'see_songs' => 'See songs',
+    'browse_seasons' => 'Browse by liturgical season',
+    'latest_publications' => 'Latest publications',
+    'see_all' => 'See all publications',
+    'stats_title' => 'Partitheco in numbers',
+    'stats_scores' => 'Scores',
+    'stats_moments' => 'Liturgical moments',
+    'stats_seasons' => 'Liturgical seasons',
+    'newsletter_title' => 'Stay informed',
+    'newsletter_desc' => 'Receive new scores and suggestions for upcoming celebrations.',
+  ],
+
+  'publications' => [
+    'title' => 'Sheet Music Library',
+    'subtitle' => 'Explore our collection of liturgical songs',
+    'all_moments' => 'All moments',
+    'all_seasons' => 'All seasons',
+    'all_voices' => 'All voices',
+    'apply_filters' => 'Apply filters',
+    'reset' => 'Reset',
+    'quick_access' => 'Quick access by moment',
+    'results_for' => 'Results for',
+  ],
+
   'footer' => [
     'credits'        => 'Website by Epsilon12!'
+  ],
+
+  'admin' => [
+    'title' => 'Title',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'delete_confirm' => 'Delete this list?',
+    'my_publications' => 'My publications',
+    'my_playlists' => 'My playlists',
+    'create_playlist' => 'Create a list',
+  ],
+
+  'playlist' => [
+    'my_list' => 'My List',
+    'search_partition' => 'Search for a score (title or author)',
+    'note_label' => 'Note (key, remarks...)',
+    'add' => 'Add',
+    'add_to_list' => 'Add to list',
+    'remove' => 'Remove',
+    'remove_confirm' => 'Remove this song from the list?',
+    'print' => 'Print',
+    'export' => 'Export',
+    'import' => 'Import',
+    'import_title' => 'Import a playlist',
+    'import_desc' => 'Select a JSON file exported from Partithéco.',
+    'cancel' => 'Cancel',
+    'generate_share' => 'Generate share link',
+    'copy' => 'Copy',
+    'link_copied' => 'Link copied!',
+    'import_success' => 'Import completed',
+    'songs_added' => 'song(s) added',
+    'not_found' => 'not found',
+    'no_songs' => 'No songs in this list yet.',
+    'moment' => 'Moment',
+    'temps' => 'Season',
+  ],
+
+  'rating' => [
+    'your_rating' => 'Your rating',
+    'not_rated' => 'Not yet rated',
+    'reviews' => 'reviews',
+  ],
+
+  'favorites' => [
+    'add' => 'Add to favorites',
+    'remove' => 'Remove from favorites',
+  ],
+
+  'create' => [
+    'title_label' => 'Title',
+    'author_label' => 'Author',
+    'arranger_label' => 'Arranger',
+    'genre_label' => 'Genre',
+    'tonality_label' => 'Key',
+    'moment_label' => 'Mass Moment',
+    'temps_label' => 'Liturgical Season',
+    'voix_label' => 'Voice type',
+    'liturgical_label' => 'Liturgical Song',
+    'media_label' => 'Video / Audio',
+    'unknown_author' => 'Unknown author',
+  ],
+
+  'calendar' => [
+    'title' => 'Liturgical Calendar',
+    'sunday' => 'Sunday',
+    'see_songs' => 'See suggested songs',
+  ],
+
+  'livrets' => [
+    'title' => 'Monthly Booklets',
+    'generate' => 'Generate booklet',
+    'download' => 'Download',
+    'print' => 'Print',
   ],
 
   'errors' => [

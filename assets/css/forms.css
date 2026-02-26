@@ -1,10 +1,29 @@
+/* ========================================
+   FORMULAIRES UNIFORMISÉS - Partitheco
+   ======================================== */
+
 .animated-form {
     width: 90%;
     max-width: 800px;
     margin: 2rem auto;
-    padding: 2rem 1rem;
+    padding: 2rem 1.5rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-  
+
+.animated-form h1 {
+    font-family: var(--font-family-serif);
+    color: var(--color-lit-night);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+[data-theme="dark"] .animated-form h1 {
+    color: var(--color-lit-gold);
+}
+
 .form-group {
     position: relative;
     margin-bottom: 1.5rem;
@@ -13,33 +32,48 @@
     animation: fadeInUp 0.6s ease-out forwards;
     animation-delay: var(--delay, 0s);
 }
-  
+
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     border: none;
-    border-bottom: 2px solid var(--primary-light);
+    border-bottom: 2px solid var(--color-lit-night);
     padding: 0.8rem 0;
     background: transparent;
     font-size: 1rem;
-    color: var(--text-action);
+    color: var(--text-color);
     outline: none;
+    transition: border-color 0.3s ease;
 }
-  
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+    border-bottom-color: var(--color-lit-gold);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-bottom-color: var(--color-lit-gold);
+}
+
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: #999;
     font-style: italic;
 }
-  
+
 .form-group label {
     position: absolute;
     top: 0.8rem;
     left: 0;
     font-size: 1rem;
-    color: #666;
+    color: var(--text-color);
+    opacity: 0.7;
     pointer-events: none;
-    transition: transform 0.3s, font-size 0.3s, color 0.3s;
+    transition: transform 0.3s, font-size 0.3s, color 0.3s, opacity 0.3s;
 }
 
 .form-group input:focus + label,
@@ -47,9 +81,9 @@
 .form-group textarea:focus + label,
 .form-group textarea:not(:placeholder-shown) + label {
     transform: translateY(-1.5rem) scale(0.85);
-    color: var(--text-action);
+    color: var(--color-lit-gold);
 }
-  
+
 .form-line {
     position: absolute;
     bottom: 0;
@@ -64,7 +98,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: var(--text-action);
+    background: var(--color-lit-gold);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease;
@@ -74,31 +108,124 @@
 .form-group textarea:focus ~ .form-line::before {
     transform: scaleX(1);
 }
-  
+
+/* Boutons de formulaire */
 .form-btn {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--color-lit-night) 0%, #2a3a54 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.error-summary {
-    background-color: rgba(255,0,0,0.1);
-    border-left: 4px solid red;
-    padding: 1rem;
+.form-btn:hover {
+    background: linear-gradient(135deg, var(--color-lit-gold) 0%, #d4b06a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
 }
-  
+
+/* Messages d'erreur et succès */
+.error-summary {
+    background: linear-gradient(135deg, rgba(142, 36, 36, 0.1) 0%, rgba(200, 50, 50, 0.1) 100%);
+    border-left: 4px solid var(--color-lit-accent);
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.5rem;
+}
+
 .error-summary ul {
     margin: 0;
     padding-left: 1.5rem;
+    color: var(--color-lit-accent);
 }
-  
+
 .error-message {
-    color: red;
-    font-size: .9rem;
+    color: var(--color-lit-accent);
+    font-size: .85rem;
     margin-top: .25rem;
 }
-  
+
 .success-message {
-    background-color: rgba(0,128,0,0.1);
-    border-left: 4px solid green;
-    padding: 1rem;
+    background: linear-gradient(135deg, rgba(0, 128, 0, 0.1) 0%, rgba(50, 180, 50, 0.1) 100%);
+    border-left: 4px solid #2e7d32;
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
     margin-top: 1rem;
+    color: #2e7d32;
+}
+
+/* Section de création */
+.create-section {
+    border: 1px solid var(--border-color);
+}
+
+/* Checkbox stylisé */
+.form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+    accent-color: var(--color-lit-gold);
+}
+
+.form-group input[type="checkbox"] + label,
+.form-group label:has(input[type="checkbox"]) {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    opacity: 1;
+    cursor: pointer;
+}
+
+/* Input file stylisé */
+.form-group input[type="file"] {
+    padding: 0.5rem 0;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    background: var(--color-lit-night);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background 0.3s;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+    background: var(--color-lit-gold);
+}
+
+/* Progress bar upload */
+.progress-container {
+    display: none;
+    margin-top: 1rem;
+    background: var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 24px;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-lit-night), var(--color-lit-gold));
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }

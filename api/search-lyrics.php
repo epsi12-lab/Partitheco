@@ -1,0 +1,67 @@
+<?php
+// api/search-lyrics.php - Recherche par paroles
+
+require_once __DIR__ . '/../bootstrap.php';
+
+use App\Database;
+
+header('Content-Type: application/json');
+
+$db = new Database();
+$pdo = $db->getPDO();
+
+$query = trim($_GET['q'] ?? '');
+$limit = min((int)($_GET['limit'] ?? 20), 50);
+
+if (strlen($query) < 3) {
+    echo json_encode(['error' => 'La recherche doit contenir au moins 3 caractères', 'results' => []]);
+    exit;
+}
+
+// Recherche dans titre, description (paroles), auteur
+$sql = "
+    SELECT p.id, p.title, p.author, p.description, p.moment_messe, p.temps_liturgique,
+           CASE 
+               WHEN p.title LIKE :exact THEN 3
+               WHEN p.description LIKE :exact THEN 2
+               ELSE 1
+           END as relevance
+    FROM projects p
+    WHERE p.title LIKE :q 
+       OR p.description LIKE :q 
+       OR p.author LIKE :q
+    ORDER BY relevance DESC, p.date_publication DESC
+    LIMIT :limit
+";
+
+$stmt = $pdo->prepare($sql);
+$like = '%' . $query . '%';
+$exact = '%' . $query . '%';
+$stmt->bindValue(':q', $like, PDO::PARAM_STR);
+$stmt->bindValue(':exact', $exact, PDO::PARAM_STR);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->execute();
+
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Extraire un extrait des paroles contenant le terme recherché
+foreach ($results as &$result) {
+    $desc = $result['description'];
+    $pos = stripos($desc, $query);
+    if ($pos !== false) {
+        $start = max(0, $pos - 50);
+        $end = min(strlen($desc), $pos + strlen($query) + 50);
+        $excerpt = ($start > 0 ? '...' : '') . substr($desc, $start, $end - $start) . ($end < strlen($desc) ? '...' : '');
+        // Mettre en évidence le terme recherché
+        $result['excerpt'] = preg_replace('/(' . preg_quote($query, '/') . ')/i', '<mark>$1</mark>', $excerpt);
+    } else {
+        $result['excerpt'] = substr($desc, 0, 100) . (strlen($desc) > 100 ? '...' : '');
+    }
+    unset($result['description']); // Ne pas renvoyer la description complète
+}
+
+echo json_encode([
+    'query' => $query,
+    'count' => count($results),
+    'results' => $results
+]);

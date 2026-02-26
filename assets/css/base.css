@@ -1,8 +1,35 @@
 :root {
-    --primary-light: #005f99;
-    --text-action:   #99005E;
-    --background:    #f4f4f4;
-    --font-family:   Arial, sans-serif;
+    /* Palette Liturgique - Mode Jour */
+    --color-lit-night: #1a2a44;
+    --color-lit-gold: #c5a059;
+    --color-lit-white: #f9f7f2;
+    --color-lit-accent: #8e2424;
+    
+    --primary-light: var(--color-lit-night);
+    --text-action: var(--color-lit-accent);
+    --background: var(--color-lit-white);
+    --font-family: 'Roboto', Arial, sans-serif;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0dcd0;
+    --navbar-shadow: rgba(0,0,0,0.15);
+    --skeleton-bg: #e8e4dc;
+}
+
+[data-theme="dark"] {
+    /* Palette Liturgique - Mode Nuit */
+    --color-lit-night: #0d1a2d;
+    --color-lit-gold: #d4b06a;
+    --color-lit-white: #1a1a1a;
+    --color-lit-accent: #c45c5c;
+    
+    --primary-light: var(--color-lit-gold);
+    --text-action: var(--color-lit-gold);
+    --background: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --border-color: #444444;
+    --skeleton-bg: #2a2a2a;
 }
   
 *,
@@ -24,13 +51,24 @@ body {
     min-height: 100vh;
     font-family: var(--font-family);
     background-color: var(--background);
+    color: var(--text-color);
     line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
 }
   
 main {
     flex: 1;
     position: relative;
     z-index: 0;
+    transition: background 0.3s;
+}
+
+[data-theme="dark"] main {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(20, 30, 40, 0.95) 100%
+    );
 }
 
 main {

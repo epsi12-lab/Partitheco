@@ -2,6 +2,21 @@
     max-width: 500px;
     margin: 2rem auto;
     text-align: center;
+    color: var(--text-color);
+}
+
+.centered-section h2,
+.centered-section h3 {
+    color: var(--color-lit-night);
+}
+
+[data-theme="dark"] .centered-section h2,
+[data-theme="dark"] .centered-section h3 {
+    color: var(--color-lit-gold);
+}
+
+.centered-section p {
+    color: var(--text-color);
 }
   
 .newsletter-form {
@@ -9,12 +24,48 @@
     gap: 0.5rem;
     justify-content: center;
     flex-wrap: wrap;
+    align-items: center;
 }
-  
-.newsletter-form input {
+
+.newsletter-form .form-group {
     flex: 1 1 250px;
-    padding: 0.5rem;
-    box-sizing: border-box;
+    margin-bottom: 0;
+}
+
+.newsletter-form .form-group label {
+    position: static;
+    display: block;
+    margin-bottom: 0.5rem;
+    opacity: 1;
+    transform: none;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.newsletter-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.newsletter-form input:focus {
+    border-color: var(--color-lit-gold);
+    outline: none;
+}
+
+.newsletter-form input::placeholder {
+    color: var(--text-color);
+    opacity: 0.6;
+}
+
+.newsletter-form .form-btn {
+    margin-top: 0;
+    white-space: nowrap;
+    color: #fff !important;
 }
 
 .success-message {

@@ -24,16 +24,21 @@ if (!isset($lang)) {
     </a>
   </div>
 
-  <ul class="navbar-menu">
+  <ul class="navbar-menu" id="navbarMenu">
     <li>
       <a href="index.php?lang=<?= $lang ?>" aria-label="<?= htmlspecialchars($t['nav']['home']) ?>">
         <?= htmlspecialchars($t['nav']['home']) ?>
       </a>
     </li>
     <li>
-      <a href="about.php?lang=<?= htmlspecialchars($lang) ?>">
-        <?= htmlspecialchars($t['nav']['about']) ?>
-      </a>
+      <a href="publications.php?lang=<?= htmlspecialchars($lang) ?>">📚 Publications</a>
+    </li>
+    <li class="dropdown">
+      <span class="dropbtn">🎵 Outils</span>
+      <ul class="dropdown-content">
+        <li><a href="calendrier.php?lang=<?= htmlspecialchars($lang) ?>">📅 Calendrier</a></li>
+        <li><a href="livrets.php?lang=<?= htmlspecialchars($lang) ?>">📖 Livrets</a></li>
+      </ul>
     </li>
 
     <?php if (isset($_SESSION['user'])): ?>
@@ -69,7 +74,15 @@ if (!isset($lang)) {
   </ul>
 
   <div class="navbar-lang">
+    <button class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <span class="sun">☀️</span>
+      <span class="moon">🌙</span>
+    </button>
     <a href="<?= htmlspecialchars($urlFr) ?>" aria-label="Passer en français">🇫🇷</a>
     <a href="<?= htmlspecialchars($urlEn) ?>" aria-label="Switch to English">🇬🇧</a>
   </div>
+
+  <button class="burger-menu" id="burgerMenu" aria-label="Ouvrir le menu">
+    ☰
+  </button>
 </nav>

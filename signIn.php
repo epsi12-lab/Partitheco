@@ -2,14 +2,20 @@
 // signIn.php
 session_start();
 
-require_once __DIR__ . '/classes/Database.php';
-require_once __DIR__ . '/classes/User.php';
+require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/assets/locales/trad.php';
+
+use App\Database;
+use App\User;
 
 $error = '';
 $username = $_POST['username'] ?? '';
 $email    = $_POST['email']    ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        redirect_error('403', 'Action non autorisée (CSRF).');
+    }
     $username         = trim($_POST['username']);
     $email            = trim($_POST['email']);
     $password         = $_POST['password'] ?? '';
@@ -64,6 +70,7 @@ include __DIR__ . '/includes/navbar.php';
 
     <?php $delay = 0.2; ?>
     <form action="signIn.php" method="post" novalidate>
+      <?php csrf_input(); ?>
       <div class="form-group" style="--delay:<?= $delay ?>s">
         <input
           type="text"

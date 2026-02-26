@@ -15,24 +15,19 @@
       <a href="https://www.youtube.com/" target="_blank" rel="noopener">
         <img src="assets/static/youtube-brands.svg" alt="YouTube">
       </a>
-      <a href="https://www.facebook.com/" target="_blank" rel="noopener">
-        <img src="assets/static/facebook-brands.svg" alt="Facebook">
+      <a href="https://github.com/" target="_blank" rel="noopener">
+        <img src="assets/static/github-brands.svg" alt="GitHub">
       </a>
       <a href="https://www.instagram.com/" target="_blank" rel="noopener">
         <img src="assets/static/instagram-brands.svg" alt="Instagram">
       </a>
-      <a href="https://twitter.com/" target="_blank" rel="noopener">
-        <img src="assets/static/x-twitter-brands.svg" alt="X">
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener">
+        <img src="assets/static/facebook-brands.svg" alt="Facebook">
       </a>
-      <a href="https://git.unistra.fr/t" target="_blank" rel="noopener">
-        <img src="assets/static/gitlab-brands.svg" alt="Gitlab">
-      </a>
-      <a href="https://github.com/" target="_blank" rel="noopener">
-        <img src="assets/static/github-brands.svg" alt="Github">
-      </a>
-      <a href="https://discord.com/" target="_blank" rel="noopener">
-        <img src="assets/static/discord-brands.svg" alt="Discord">
-      </a>
+    </div>
+
+    <div class="footer-about">
+      <a href="about.php?lang=<?= $lang ?>"><?= htmlspecialchars($t['nav']['about']) ?></a>
     </div>
 
     <div class="footer-credit">
