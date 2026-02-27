@@ -52,6 +52,8 @@ class Database {
                 username TEXT NOT NULL UNIQUE,
                 email TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
+                first_name TEXT,
+                last_name TEXT,
                 paroisse TEXT,
                 role_choral TEXT
             )
@@ -161,6 +163,8 @@ class Database {
                 username TEXT    NOT NULL UNIQUE,
                 email    TEXT    NOT NULL UNIQUE,
                 password TEXT    NOT NULL,
+                first_name TEXT,
+                last_name TEXT,
                 paroisse TEXT,
                 role_choral TEXT
             )

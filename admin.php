@@ -72,7 +72,9 @@ include 'includes/navbar.php';
 
   <section class="profile-section" style="max-width: 600px; margin: 2rem auto; padding: 1rem; border: 1px solid var(--border-color);">
     <h2>Mon Profil</h2>
+    <p style="margin-bottom:1rem;"><strong><?= htmlspecialchars(($userData['first_name'] ?? '') . ' ' . ($userData['last_name'] ?? '')) ?></strong> (<?= htmlspecialchars($userData['email'] ?? '') ?>)</p>
     <form method="post" class="profile-form">
+        <?php csrf_input(); ?>
         <div class="form-group" style="--delay:0.1s">
             <input type="text" name="paroisse" id="paroisse" placeholder=" " value="<?= htmlspecialchars($userData['paroisse'] ?? '') ?>">
             <label for="paroisse">Paroisse / Chorale</label>

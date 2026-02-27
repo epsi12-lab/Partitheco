@@ -9,18 +9,32 @@ use App\Database;
 use App\User;
 
 $error = '';
-$username = $_POST['username'] ?? '';
-$email    = $_POST['email']    ?? '';
+$firstName = $_POST['first_name'] ?? '';
+$lastName  = $_POST['last_name'] ?? '';
+$username  = $_POST['username'] ?? '';
+$email     = $_POST['email']    ?? '';
+$paroisse  = $_POST['paroisse'] ?? '';
+$roleChoral = $_POST['role_choral'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         redirect_error('403', 'Action non autorisée (CSRF).');
     }
+    $firstName        = trim($_POST['first_name'] ?? '');
+    $lastName         = trim($_POST['last_name'] ?? '');
     $username         = trim($_POST['username']);
     $email            = trim($_POST['email']);
     $password         = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
+    $paroisse         = trim($_POST['paroisse'] ?? '');
+    $roleChoral       = trim($_POST['role_choral'] ?? '');
 
+    if ($firstName === '') {
+        $error .= "Le prénom est requis.<br>";
+    }
+    if ($lastName === '') {
+        $error .= "Le nom est requis.<br>";
+    }
     if ($username === '') {
         $error .= "Le nom d'utilisateur est requis.<br>";
     }
@@ -40,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db      = new Database();
         $userObj = new User($db->getPDO());
         try {
-            $userObj->register($username, $email, $password);
+            $userObj->register($username, $email, $password, $firstName, $lastName, $paroisse ?: null, $roleChoral ?: null);
             $user = $userObj->login($username, $password);
             if ($user) {
                 $_SESSION['user'] = $user;
@@ -74,13 +88,38 @@ include __DIR__ . '/includes/navbar.php';
       <div class="form-group" style="--delay:<?= $delay ?>s">
         <input
           type="text"
+          id="first_name"
+          name="first_name"
+          placeholder=" "
+          required
+          value="<?= htmlspecialchars($firstName) ?>">
+        <label for="first_name">Prénom :</label>
+        <div class="form-line"></div>
+      </div>
+
+      <?php $delay += 0.1; ?>
+      <div class="form-group" style="--delay:<?= $delay ?>s">
+        <input
+          type="text"
+          id="last_name"
+          name="last_name"
+          placeholder=" "
+          required
+          value="<?= htmlspecialchars($lastName) ?>">
+        <label for="last_name">Nom :</label>
+        <div class="form-line"></div>
+      </div>
+
+      <?php $delay += 0.1; ?>
+      <div class="form-group" style="--delay:<?= $delay ?>s">
+        <input
+          type="text"
           id="username"
           name="username"
           placeholder=" "
           required
           value="<?= htmlspecialchars($username) ?>">
-        
-        <label for="username"><?= htmlspecialchars($t['form']['name']) ?> :</label>
+        <label for="username">Nom d'utilisateur :</label>
         <div class="form-line"></div>
       </div>
 
@@ -120,6 +159,30 @@ include __DIR__ . '/includes/navbar.php';
         <label for="password_confirm">
             <?= htmlspecialchars($t['form']['password_confirm']) ?>
         </label>
+        <div class="form-line"></div>
+      </div>
+
+      <?php $delay += 0.1; ?>
+      <div class="form-group" style="--delay:<?= $delay ?>s">
+        <input
+          type="text"
+          id="paroisse"
+          name="paroisse"
+          placeholder=" "
+          value="<?= htmlspecialchars($paroisse) ?>">
+        <label for="paroisse">Paroisse / Chorale (optionnel)</label>
+        <div class="form-line"></div>
+      </div>
+
+      <?php $delay += 0.1; ?>
+      <div class="form-group" style="--delay:<?= $delay ?>s">
+        <input
+          type="text"
+          id="role_choral"
+          name="role_choral"
+          placeholder=" "
+          value="<?= htmlspecialchars($roleChoral) ?>">
+        <label for="role_choral">Rôle (ex: Chef de chœur, Soprano...)</label>
         <div class="form-line"></div>
       </div>
 
