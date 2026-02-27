@@ -17,27 +17,27 @@ $tempsFilter = $_GET['temps'] ?? '';
 
 // Moments de la messe
 $moments = [
-    ['slug' => 'entree', 'nom' => 'Entrée', 'icon' => '🚪'],
-    ['slug' => 'kyrie', 'nom' => 'Kyrie', 'icon' => '🙏'],
-    ['slug' => 'gloria', 'nom' => 'Gloria', 'icon' => '✨'],
-    ['slug' => 'psaume', 'nom' => 'Psaume', 'icon' => '📖'],
-    ['slug' => 'acclamation', 'nom' => 'Acclamation', 'icon' => '🎵'],
-    ['slug' => 'credo', 'nom' => 'Credo', 'icon' => '✝️'],
-    ['slug' => 'offertoire', 'nom' => 'Offertoire', 'icon' => '🍞'],
-    ['slug' => 'sanctus', 'nom' => 'Sanctus', 'icon' => '👼'],
-    ['slug' => 'agnus', 'nom' => 'Agnus Dei', 'icon' => '🐑'],
-    ['slug' => 'communion', 'nom' => 'Communion', 'icon' => '🍷'],
-    ['slug' => 'envoi', 'nom' => 'Envoi', 'icon' => '🕊️'],
-    ['slug' => 'marie', 'nom' => 'Chants à Marie', 'icon' => '💙'],
+    ['slug' => 'Entrée', 'nom' => 'Entrée', 'icon' => '🚪'],
+    ['slug' => 'Kyrie', 'nom' => 'Kyrie', 'icon' => '🙏'],
+    ['slug' => 'Gloria', 'nom' => 'Gloria', 'icon' => '✨'],
+    ['slug' => 'Psaume', 'nom' => 'Psaume', 'icon' => '📖'],
+    ['slug' => 'Acclamation', 'nom' => 'Acclamation', 'icon' => '🎵'],
+    ['slug' => 'Credo', 'nom' => 'Credo', 'icon' => '✝️'],
+    ['slug' => 'Offertoire', 'nom' => 'Offertoire', 'icon' => '🍞'],
+    ['slug' => 'Sanctus', 'nom' => 'Sanctus', 'icon' => '👼'],
+    ['slug' => 'Agnus Dei', 'nom' => 'Agnus Dei', 'icon' => '🐑'],
+    ['slug' => 'Communion', 'nom' => 'Communion', 'icon' => '🍷'],
+    ['slug' => 'Envoi', 'nom' => 'Envoi', 'icon' => '🕊️'],
+    ['slug' => 'Marie', 'nom' => 'Chants à Marie', 'icon' => '💙'],
 ];
 
 // Temps liturgiques
 $tempsLiturgiques = [
-    ['slug' => 'avent', 'nom' => 'Avent'],
-    ['slug' => 'noel', 'nom' => 'Noël'],
-    ['slug' => 'careme', 'nom' => 'Carême'],
-    ['slug' => 'paques', 'nom' => 'Pâques'],
-    ['slug' => 'ordinaire', 'nom' => 'Temps Ordinaire'],
+    ['slug' => 'Avent', 'nom' => 'Avent'],
+    ['slug' => 'Noël', 'nom' => 'Noël'],
+    ['slug' => 'Carême', 'nom' => 'Carême'],
+    ['slug' => 'Pâques', 'nom' => 'Pâques'],
+    ['slug' => 'Ordinaire', 'nom' => 'Temps Ordinaire'],
 ];
 
 // Types de voix

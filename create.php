@@ -23,7 +23,7 @@ $tonality    = $_POST['tonality']    ?? '';
 $moment      = $_POST['moment_messe'] ?? null;
 $temps       = $_POST['temps_liturgique'] ?? null;
 $voix        = $_POST['voix']        ?? null;
-$is_lit      = isset($_POST['is_liturgical']) ? 1 : 0;
+$is_lit      = isset($_POST['is_liturgical']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {

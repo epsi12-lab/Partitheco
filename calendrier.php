@@ -126,6 +126,10 @@ include __DIR__ . '/includes/navbar.php';
 .calendrier-page { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
 .calendrier-header { text-align: center; margin-bottom: 1.5rem; }
 .calendrier-header h1 { font-family: var(--font-family-serif); color: var(--color-lit-night); }
+[data-theme="dark"] .calendrier-header h1 { color: var(--color-lit-gold); }
+[data-theme="dark"] .day-header { color: var(--color-lit-gold); }
+[data-theme="dark"] .calendrier-nav h2 { color: var(--color-lit-gold); }
+[data-theme="dark"] .btn-nav { background: var(--card-bg); color: var(--text-color); border-color: var(--border-color); }
 
 .calendrier-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .calendrier-nav h2 { font-family: var(--font-family-serif); }
@@ -172,7 +176,7 @@ function showDayDetails(cell) {
   document.getElementById('modalDate').textContent = new Date(date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   document.getElementById('modalTemps').textContent = 'Temps liturgique : ' + temps;
   document.getElementById('modalTemps').className = 'modal-temps legend-item ' + temps.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  document.getElementById('modalLink').href = 'publications.php?temps=' + encodeURIComponent(temps.toLowerCase()) + '&lang=<?= $lang ?>';
+  document.getElementById('modalLink').href = 'publications.php?temps=' + encodeURIComponent(temps) + '&lang=<?= $lang ?>';
   document.getElementById('modalSuggestions').innerHTML = '<p>Cliquez ci-dessous pour voir les chants suggérés pour ce temps liturgique.</p>';
   document.getElementById('dayModal').style.display = 'flex';
 }

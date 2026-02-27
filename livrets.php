@@ -80,7 +80,9 @@ include __DIR__ . '/includes/navbar.php';
 .livrets-page { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
 .livrets-header { text-align: center; margin-bottom: 2rem; }
 .livrets-header h1 { font-family: var(--font-family-serif); color: var(--color-lit-night); }
+[data-theme="dark"] .livrets-header h1 { color: var(--color-lit-gold); }
 .livrets-header .subtitle { color: #666; }
+[data-theme="dark"] .livrets-header .subtitle { color: var(--text-muted); }
 
 .livrets-selector { background: var(--card-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .livret-form .form-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; }
@@ -91,11 +93,13 @@ include __DIR__ . '/includes/navbar.php';
 .livret-preview { background: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .livret-header-preview { text-align: center; border-bottom: 2px solid var(--color-lit-gold); padding-bottom: 1rem; margin-bottom: 1.5rem; }
 .livret-header-preview h2 { color: var(--color-lit-night); font-family: var(--font-family-serif); }
+[data-theme="dark"] .livret-header-preview h2 { color: var(--color-lit-gold); }
 
 .livret-content { display: grid; gap: 1rem; }
 .livret-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--background); border-radius: 8px; border-left: 4px solid var(--color-lit-gold); }
 .livret-item-info h4 { margin: 0 0 0.25rem; }
 .livret-item-info p { margin: 0; font-size: 0.9rem; color: #666; }
+[data-theme="dark"] .livret-item-info p { color: var(--text-muted); }
 .livret-item-tags { display: flex; gap: 0.5rem; }
 .livret-item-tags span { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; background: var(--color-lit-gold); color: white; }
 

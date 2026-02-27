@@ -35,6 +35,7 @@ require_once __DIR__ . '/../assets/locales/trad.php';
     <link rel="stylesheet" href="/assets/css/about.css">
     <link rel="stylesheet" href="/assets/css/audio-player.css">
     <link rel="stylesheet" href="/assets/css/rating.css">
+    <script src="assets/js/base.js" defer></script>
     <script src="assets/js/validation.js"></script>
     <script src="assets/js/dynamic-features.js" defer></script>
     <script src="assets/js/offline-cache.js" defer></script>
