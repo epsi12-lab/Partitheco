@@ -68,45 +68,46 @@ include 'includes/navbar.php';
 ?>
 
 <main class="admin-dashboard">
-  <h1><?= htmlspecialchars($t['pages']['admin_title']) ?> (<?= htmlspecialchars($userData['username']) ?>)</h1>
+  <h1><?= htmlspecialchars($t['pages']['admin_title'] ?? 'Tableau de bord') ?> (<?= htmlspecialchars($userData['username']) ?>)</h1>
 
-  <section class="profile-section" style="max-width: 600px; margin: 2rem auto; padding: 1rem; border: 1px solid var(--border-color);">
-    <h2>Mon Profil</h2>
-    <p style="margin-bottom:1rem;"><strong><?= htmlspecialchars(($userData['first_name'] ?? '') . ' ' . ($userData['last_name'] ?? '')) ?></strong> (<?= htmlspecialchars($userData['email'] ?? '') ?>)</p>
+  <section class="animated-form admin-section">
+    <h2><?= htmlspecialchars($t['admin']['my_profile'] ?? 'Mon Profil') ?></h2>
+    <p class="profile-info"><strong><?= htmlspecialchars(($userData['first_name'] ?? '') . ' ' . ($userData['last_name'] ?? '')) ?></strong> (<?= htmlspecialchars($userData['email'] ?? '') ?>)</p>
     <form method="post" class="profile-form">
         <?php csrf_input(); ?>
-        <div class="form-group" style="--delay:0.1s">
+        <?php $delay = 0.1; ?>
+        <div class="form-group" style="--delay:<?= $delay ?>s">
             <input type="text" name="paroisse" id="paroisse" placeholder=" " value="<?= htmlspecialchars($userData['paroisse'] ?? '') ?>">
-            <label for="paroisse">Paroisse / Chorale</label>
+            <label for="paroisse"><?= htmlspecialchars($t['form']['paroisse'] ?? 'Paroisse / Chorale') ?></label>
+            <div class="form-line"></div>
         </div>
-        <div class="form-group" style="--delay:0.2s">
+        <?php $delay += 0.1; ?>
+        <div class="form-group" style="--delay:<?= $delay ?>s">
             <input type="text" name="role_choral" id="role_choral" placeholder=" " value="<?= htmlspecialchars($userData['role_choral'] ?? '') ?>">
-            <label for="role_choral">Rôle (ex: Chef de chœur, Soprano...)</label>
+            <label for="role_choral"><?= htmlspecialchars($t['form']['role_choral'] ?? 'Rôle (ex: Chef de chœur, Soprano...)') ?></label>
+            <div class="form-line"></div>
         </div>
-        <button type="submit" name="update_profile" class="btn-primary">Mettre à jour le profil</button>
+        <?php $delay += 0.1; ?>
+        <button type="submit" name="update_profile" class="btn-primary form-btn" style="--delay:<?= $delay ?>s"><?= htmlspecialchars($t['buttons']['update_profile'] ?? 'Mettre à jour le profil') ?></button>
     </form>
   </section>
 
-  <p style="text-align: center; margin: 2rem 0;">
-  <button
-    type="button"
-    class="btn-primary"
-    onclick="location.href='create.php?lang=<?= htmlspecialchars($lang) ?>'"
-  >
-  Publier une nouvelle partition
-  </button>
-</p>
+  <p class="text-center">
+    <button type="button" class="btn-primary" onclick="location.href='create.php?lang=<?= htmlspecialchars($lang) ?>'">
+      <?= htmlspecialchars($t['buttons']['new_publication'] ?? 'Publier une nouvelle partition') ?>
+    </button>
+  </p>
 
-  <h2>Mes Publications</h2>
+  <h2><?= htmlspecialchars($t['admin']['my_publications'] ?? 'Mes Publications') ?></h2>
   <?php if (empty($projects)): ?>
-    <p>Vous n'avez encore publié aucune partition.</p>
+    <p><?= htmlspecialchars($t['admin']['no_publications'] ?? 'Vous n\'avez encore publié aucune partition.') ?></p>
   <?php else: ?>
-    <table>
+    <table class="admin-table">
       <thead>
         <tr>
-          <th>Titre</th>
-          <th>Date</th>
-          <th>Actions</th>
+          <th><?= htmlspecialchars($t['table']['title'] ?? 'Titre') ?></th>
+          <th><?= htmlspecialchars($t['table']['date'] ?? 'Date') ?></th>
+          <th><?= htmlspecialchars($t['table']['actions'] ?? 'Actions') ?></th>
         </tr>
       </thead>
       <tbody>
@@ -119,10 +120,10 @@ include 'includes/navbar.php';
           </td>
           <td><?= (new DateTime($p['date_publication']))->format('d/m/Y') ?></td>
           <td>
-            <a href="edit.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>">Modifier</a> |
+            <a href="edit.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>"><?= htmlspecialchars($t['buttons']['edit'] ?? 'Modifier') ?></a> |
             <a href="delete.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>"
-               onclick="return confirm('Voulez-vous vraiment supprimer ce projet ?');">
-              Supprimer
+               onclick="return confirm('<?= htmlspecialchars($t['confirm']['delete_project'] ?? 'Voulez-vous vraiment supprimer ce projet ?') ?>');">
+              <?= htmlspecialchars($t['buttons']['delete'] ?? 'Supprimer') ?>
             </a>
           </td>
         </tr>
@@ -131,38 +132,41 @@ include 'includes/navbar.php';
     </table>
   <?php endif; ?>
 
-  <h2 style="margin-top: 3rem;">Mes Listes (Ma Chorale)</h2>
-  <section class="playlists-section" style="max-width: 800px; margin: 2rem auto; padding: 1rem; border: 1px solid var(--border-color); background: var(--card-bg);">
-    <form method="post" style="display:flex; gap:10px; margin-bottom:1.5rem; align-items: flex-end;">
+  <h2><?= htmlspecialchars($t['admin']['my_playlists'] ?? 'Mes Listes (Ma Chorale)') ?></h2>
+  <section class="animated-form admin-section">
+    <form method="post" class="playlist-form">
         <?php csrf_input(); ?>
-        <div class="form-group" style="margin-bottom:0; flex:1;">
+        <div class="form-group" style="--delay:0.1s; flex:1;">
             <input type="text" name="playlist_name" id="playlist_name" placeholder=" " required>
-            <label for="playlist_name">Nom de la célébration (ex: Messe du 15 Août)</label>
+            <label for="playlist_name"><?= htmlspecialchars($t['form']['playlist_name'] ?? 'Nom de la célébration (ex: Messe du 15 Août)') ?></label>
+            <div class="form-line"></div>
         </div>
-        <div class="form-group" style="margin-bottom:0; width:150px;">
-            <input type="date" name="event_date" id="event_date">
+        <div class="form-group" style="--delay:0.2s; width:150px;">
+            <input type="date" name="event_date" id="event_date" placeholder=" ">
+            <label for="event_date"><?= htmlspecialchars($t['form']['event_date'] ?? 'Date') ?></label>
+            <div class="form-line"></div>
         </div>
-        <button type="submit" name="create_playlist" class="btn-primary" style="padding: 0.5rem 1rem;">Créer</button>
+        <button type="submit" name="create_playlist" class="btn-primary"><?= htmlspecialchars($t['buttons']['create'] ?? 'Créer') ?></button>
     </form>
 
     <?php if (empty($playlists)): ?>
-        <p>Aucune liste de chants créée.</p>
+        <p><?= htmlspecialchars($t['admin']['no_playlists'] ?? 'Aucune liste de chants créée.') ?></p>
     <?php else: ?>
-        <ul style="list-style:none; padding:0;">
+        <ul class="playlist-list">
             <?php foreach ($playlists as $pl): ?>
-                <li style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--border-color);">
+                <li class="playlist-item">
                     <div>
                         <strong><?= htmlspecialchars($pl['name']) ?></strong>
                         <?php if ($pl['event_date']): ?>
-                            <span style="font-size:0.8rem; color:#666;"> - <?= (new DateTime($pl['event_date']))->format('d/m/Y') ?></span>
+                            <span class="playlist-date"> - <?= (new DateTime($pl['event_date']))->format('d/m/Y') ?></span>
                         <?php endif; ?>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <a href="playlist.php?id=<?= $pl['id'] ?>&lang=<?= $lang ?>" class="btn-secondary" style="font-size:0.8rem;">Gérer les chants</a>
-                        <form method="post" onsubmit="return confirm('Supprimer cette liste ?');">
+                    <div class="playlist-actions">
+                        <a href="playlist.php?id=<?= $pl['id'] ?>&lang=<?= $lang ?>" class="btn-secondary btn-sm"><?= htmlspecialchars($t['buttons']['manage_songs'] ?? 'Gérer les chants') ?></a>
+                        <form method="post" onsubmit="return confirm('<?= htmlspecialchars($t['confirm']['delete_playlist'] ?? 'Supprimer cette liste ?') ?>');">
                             <?php csrf_input(); ?>
                             <input type="hidden" name="playlist_id" value="<?= $pl['id'] ?>">
-                            <button type="submit" name="delete_playlist" class="btn-danger" style="font-size:0.8rem; background:transparent; color:red; border:none; cursor:pointer;">Supprimer</button>
+                            <button type="submit" name="delete_playlist" class="btn-danger btn-sm"><?= htmlspecialchars($t['buttons']['delete'] ?? 'Supprimer') ?></button>
                         </form>
                     </div>
                 </li>
@@ -171,9 +175,9 @@ include 'includes/navbar.php';
     <?php endif; ?>
   </section>
 
-  <h2 style="margin-top: 3rem;">Mes Favoris</h2>
+  <h2><?= htmlspecialchars($t['admin']['my_favorites'] ?? 'Mes Favoris') ?></h2>
   <?php if (empty($favorites)): ?>
-    <p>Vous n'avez aucune partition en favoris.</p>
+    <p><?= htmlspecialchars($t['admin']['no_favorites'] ?? 'Vous n\'avez aucune partition en favoris.') ?></p>
   <?php else: ?>
     <div id="projectsContainer">
         <?php foreach ($favorites as $f): ?>

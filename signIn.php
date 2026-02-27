@@ -144,7 +144,8 @@ include __DIR__ . '/includes/navbar.php';
           name="password"
           placeholder=" "
           required>
-        <label for="password"><?= htmlspecialchars($t['form']['password']) ?> :</label>
+        <label for="password"><?= htmlspecialchars($t['form']['password'] ?? 'Mot de passe') ?> :</label>
+        <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
         <div class="form-line"></div>
       </div>
 
@@ -157,8 +158,9 @@ include __DIR__ . '/includes/navbar.php';
           placeholder=" "
           required>
         <label for="password_confirm">
-            <?= htmlspecialchars($t['form']['password_confirm']) ?>
+            <?= htmlspecialchars($t['form']['password_confirm'] ?? 'Confirmer le mot de passe') ?>
         </label>
+        <button type="button" class="toggle-password" onclick="togglePassword('password_confirm')">👁️</button>
         <div class="form-line"></div>
       </div>
 
@@ -196,4 +198,17 @@ include __DIR__ . '/includes/navbar.php';
   </section>
 </main>
 
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const btn = field.parentElement.querySelector('.toggle-password');
+    if (field.type === 'password') {
+        field.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        field.type = 'password';
+        btn.textContent = '👁️';
+    }
+}
+</script>
 <?php include __DIR__ . '/includes/footer.php'; ?>

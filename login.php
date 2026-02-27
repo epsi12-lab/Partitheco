@@ -100,7 +100,8 @@ include 'includes/navbar.php';
           name="password"
           placeholder=" "
           required>
-        <label for="password"><?= htmlspecialchars($t['form']['password']) ?> :</label>
+        <label for="password"><?= htmlspecialchars($t['form']['password'] ?? 'Mot de passe') ?> :</label>
+        <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
         <div class="form-line"></div>
         <p class="error-message"></p>
       </div>
@@ -117,4 +118,17 @@ include 'includes/navbar.php';
   </section>
 </main>
 
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const btn = field.parentElement.querySelector('.toggle-password');
+    if (field.type === 'password') {
+        field.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        field.type = 'password';
+        btn.textContent = '👁️';
+    }
+}
+</script>
 <?php include 'includes/footer.php'; ?>
