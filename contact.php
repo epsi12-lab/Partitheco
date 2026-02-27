@@ -75,7 +75,7 @@ include 'includes/navbar.php';
       <?php $delay = 0.1; ?>
 
       <form id="contactForm"
-            action="contact.php?lang=<?= htmlspecialchars($lang) ?>"
+            action="https://formspree.io/f/xreajwyp"
             method="post"
             novalidate>
         <?php csrf_input(); ?>
