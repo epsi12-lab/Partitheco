@@ -27,11 +27,11 @@
     </div>
 
     <div class="footer-about">
-      <a href="about.php?lang=<?= $lang ?>"><?= htmlspecialchars($t['nav']['about']) ?></a>
+      <a href="about.php?lang=<?= $lang ?? 'fr' ?>"><?= htmlspecialchars($t['nav']['about'] ?? 'À propos') ?></a>
     </div>
 
     <div class="footer-credit">
-      <p><?= htmlspecialchars($t['footer']['credits']) ?></p>
+      <p><?= htmlspecialchars($t['footer']['credits'] ?? '') ?></p>
       <p>&copy; <?= date("Y") ?> Partithéco</p>
     </div>
 

@@ -26,8 +26,8 @@ if (!isset($lang)) {
 
   <ul class="navbar-menu" id="navbarMenu">
     <li>
-      <a href="index.php?lang=<?= $lang ?>" aria-label="<?= htmlspecialchars($t['nav']['home']) ?>">
-        <?= htmlspecialchars($t['nav']['home']) ?>
+      <a href="index.php?lang=<?= $lang ?>" aria-label="<?= htmlspecialchars($t['nav']['home'] ?? 'Accueil') ?>">
+        <?= htmlspecialchars($t['nav']['home'] ?? 'Accueil') ?>
       </a>
     </li>
     <li>
@@ -44,28 +44,28 @@ if (!isset($lang)) {
     <?php if (isset($_SESSION['user'])): ?>
       <li>
         <a href="admin.php?lang=<?= htmlspecialchars($lang) ?>">
-          <?= htmlspecialchars($t['nav']['admin']) ?>
+          <?= htmlspecialchars($t['nav']['admin'] ?? 'Tableau de bord') ?>
         </a>
       </li>
       <li>
         <a href="logout.php?lang=<?= htmlspecialchars($lang) ?>">
-          <?= htmlspecialchars($t['nav']['logout']) ?>
+          <?= htmlspecialchars($t['nav']['logout'] ?? 'Déconnexion') ?>
         </a>
       </li>
     <?php else: ?>
       <li class="dropdown">
         <span class="dropbtn">
-          <?= htmlspecialchars($t['nav']['login']) ?>
+          <?= htmlspecialchars($t['nav']['login'] ?? 'Connexion') ?>
         </span>
         <ul class="dropdown-content">
           <li>
             <a href="login.php?lang=<?= htmlspecialchars($lang) ?>">
-              <?= htmlspecialchars($t['nav']['login']) ?>
+              <?= htmlspecialchars($t['nav']['login'] ?? 'Connexion') ?>
             </a>
           </li>
           <li>
             <a href="signIn.php?lang=<?= htmlspecialchars($lang) ?>">
-              <?= htmlspecialchars($t['nav']['register']) ?>
+              <?= htmlspecialchars($t['nav']['register'] ?? "S'inscrire") ?>
             </a>
           </li>
         </ul>
