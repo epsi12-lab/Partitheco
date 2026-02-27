@@ -181,8 +181,9 @@ include __DIR__ . '/includes/navbar.php';
   <?php
     $thumb = $project['thumbnail'] ?? '';
     if ($thumb) {
+        $isCloudinary = str_starts_with($thumb, 'http');
         $ext = strtolower(pathinfo($thumb, PATHINFO_EXTENSION));
-        $url = "assets/img/{$thumb}";
+        $url = $isCloudinary ? $thumb : "assets/img/{$thumb}";
         if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
           <a href="javascript:void(0)" onclick="openLightbox('<?= htmlspecialchars($url) ?>')">
             <img
@@ -204,8 +205,9 @@ include __DIR__ . '/includes/navbar.php';
   ?>
 
   <?php if (!empty($project['media'])):
+    $isMediaCloudinary = str_starts_with($project['media'], 'http');
     $mext = strtolower(pathinfo($project['media'], PATHINFO_EXTENSION));
-    $murl = "assets/img/{$project['media']}";
+    $murl = $isMediaCloudinary ? $project['media'] : "assets/img/{$project['media']}";
     if (in_array($mext, ['mp4','webm','ogg'])): ?>
       <video class="project-media" controls preload="metadata">
         <source src="<?= htmlspecialchars($murl) ?>" type="video/<?= $mext ?>">

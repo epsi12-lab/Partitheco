@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createProjectCard(p, idx) {
     const ext     = p.thumbnail ? p.thumbnail.split('.').pop().toLowerCase() : '';
-    const fileUrl = `assets/img/${p.thumbnail}`;
+    const isCloudinary = p.thumbnail && p.thumbnail.startsWith('http');
+    const fileUrl = isCloudinary ? p.thumbnail : `assets/img/${p.thumbnail}`;
     const detail  = `project.php?id=${p.id}&lang=${lang}`;
 
     const div = document.createElement('div');

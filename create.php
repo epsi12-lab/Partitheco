@@ -38,12 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($mime, $allowedMimes)) {
             $errors[] = 'Type de fichier non autorisé (Seuls JPG, PNG, GIF et PDF sont acceptés).';
         } else {
-            $fn     = basename($_FILES['file']['name']);
-            $tgt    = 'assets/img/' . time() . "_{$fn}";
-            if (move_uploaded_file($_FILES['file']['tmp_name'], $tgt)) {
-                $thumbnail = basename($tgt);
+            $cloudinary = new \App\Cloudinary();
+            if ($cloudinary->isConfigured()) {
+                $result = $cloudinary->upload($_FILES['file']['tmp_name'], ['folder' => 'partitions']);
+                if ($result && isset($result['secure_url'])) {
+                    $thumbnail = $result['secure_url'];
+                } else {
+                    $errors[] = 'Erreur upload Cloudinary.';
+                }
             } else {
-                $errors[] = 'Erreur lors de l’upload du fichier.';
+                $fn  = basename($_FILES['file']['name']);
+                $tgt = 'assets/img/' . time() . "_{$fn}";
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $tgt)) {
+                    $thumbnail = basename($tgt);
+                } else {
+                    $errors[] = 'Erreur lors de l\'upload du fichier.';
+                }
             }
         }
     } else {
@@ -62,12 +72,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($mime, $allowedMediaMimes)) {
             $errors[] = 'Type de média non autorisé (MP3, WAV, OGG, MP4, WEBM acceptés).';
         } else {
-            $fn  = basename($_FILES['media']['name']);
-            $tgt = 'assets/img/' . time() . "_media_{$fn}";
-            if (move_uploaded_file($_FILES['media']['tmp_name'], $tgt)) {
-                $media = basename($tgt);
+            $cloudinary = new \App\Cloudinary();
+            if ($cloudinary->isConfigured()) {
+                $result = $cloudinary->upload($_FILES['media']['tmp_name'], ['folder' => 'partitions/media', 'resource_type' => 'video']);
+                if ($result && isset($result['secure_url'])) {
+                    $media = $result['secure_url'];
+                } else {
+                    $errors[] = 'Erreur upload média Cloudinary.';
+                }
             } else {
-                $errors[] = 'Erreur lors de l’upload du média.';
+                $fn  = basename($_FILES['media']['name']);
+                $tgt = 'assets/img/' . time() . "_media_{$fn}";
+                if (move_uploaded_file($_FILES['media']['tmp_name'], $tgt)) {
+                    $media = basename($tgt);
+                } else {
+                    $errors[] = 'Erreur lors de l\'upload du média.';
+                }
             }
         }
     }
