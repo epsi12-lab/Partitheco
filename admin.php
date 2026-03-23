@@ -1,10 +1,6 @@
 <?php
 // admin.php
 session_start();
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit;
-}
 
 $lang   = $_GET['lang'] ?? 'fr';
 $userId = $_SESSION['user']['id'];
@@ -13,55 +9,49 @@ require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 use App\Database;
-use App\Project;
-use App\Favorite;
-use App\User;
-use App\Playlist;
+use App\AdminDashboardService;
+
+require_auth_redirect();
 
 $db          = new Database();
 $pdo         = $db->getPDO();
-$projectObj  = new Project($pdo);
-$favoriteObj = new Favorite($pdo);
-$userObj     = new User($pdo);
-$playlistObj = new Playlist($pdo);
+$dashboardService = new AdminDashboardService($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $paroisse = trim($_POST['paroisse'] ?? '');
-    $role     = trim($_POST['role_choral'] ?? '');
-    $userObj->updateProfile($userId, $paroisse, $role);
-    $_SESSION['user']['paroisse'] = $paroisse;
-    $_SESSION['user']['role_choral'] = $role;
+    verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+    $dashboardService->updateProfile(
+        $_SESSION['user'],
+        $_POST['paroisse'] ?? '',
+        $_POST['role_choral'] ?? ''
+    );
     header("Location: admin.php?lang=$lang");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_playlist'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        redirect_error('403', 'Action non autorisée (CSRF).');
-    }
-    $name = trim($_POST['playlist_name'] ?? '');
-    $date = trim($_POST['event_date'] ?? null) ?: null;
-    if ($name !== '') {
-        $playlistObj->create($userId, $name, null, $date);
+    verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+    if ($dashboardService->createPlaylist(
+        $userId,
+        $_POST['playlist_name'] ?? '',
+        $_POST['event_date'] ?? null
+    )) {
         header("Location: admin.php?lang=$lang");
         exit;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_playlist'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        redirect_error('403', 'Action non autorisée (CSRF).');
-    }
-    $plId = (int) $_POST['playlist_id'];
-    $playlistObj->delete($plId, $userId);
+    verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+    $dashboardService->deletePlaylist((int) $_POST['playlist_id'], $userId);
     header("Location: admin.php?lang=$lang");
     exit;
 }
 
-$projects  = $projectObj->getByUser($userId);
-$favorites = $favoriteObj->getByUser($userId);
-$playlists = $playlistObj->getByUser($userId);
-$userData  = $userObj->findByUsername($_SESSION['user']['username']);
+$dashboardData = $dashboardService->buildDashboardData($_SESSION['user']);
+$projects  = $dashboardData['projects'];
+$favorites = $dashboardData['favorites'];
+$playlists = $dashboardData['playlists'];
+$userData  = $dashboardData['userData'];
 
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -113,18 +103,19 @@ include 'includes/navbar.php';
       <tbody>
         <?php foreach ($projects as $p): ?>
         <tr>
-          <td>
+          <td data-label="<?= htmlspecialchars($t['table']['title'] ?? 'Titre') ?>">
             <a href="project.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>">
               <?= htmlspecialchars($p['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
             </a>
           </td>
-          <td><?= (new DateTime($p['date_publication']))->format('d/m/Y') ?></td>
-          <td>
+          <td data-label="<?= htmlspecialchars($t['table']['date'] ?? 'Date') ?>"><?= (new DateTime($p['date_publication']))->format('d/m/Y') ?></td>
+          <td data-label="<?= htmlspecialchars($t['table']['actions'] ?? 'Actions') ?>" class="admin-publications-actions">
             <a href="edit.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>"><?= htmlspecialchars($t['buttons']['edit'] ?? 'Modifier') ?></a> |
-            <a href="delete.php?id=<?= $p['id'] ?>&lang=<?= $lang ?>"
-               onclick="return confirm('<?= htmlspecialchars($t['confirm']['delete_project'] ?? 'Voulez-vous vraiment supprimer ce projet ?') ?>');">
-              <?= htmlspecialchars($t['buttons']['delete'] ?? 'Supprimer') ?>
-            </a>
+            <form method="post" action="delete.php?lang=<?= htmlspecialchars($lang) ?>" class="admin-delete-inline" onsubmit="return confirm('<?= htmlspecialchars($t['confirm']['delete_project'] ?? 'Voulez-vous vraiment supprimer ce projet ?') ?>');">
+              <?php csrf_input(); ?>
+              <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+              <button type="submit" class="btn-link"><?= htmlspecialchars($t['buttons']['delete'] ?? 'Supprimer') ?></button>
+            </form>
           </td>
         </tr>
         <?php endforeach; ?>
@@ -141,7 +132,7 @@ include 'includes/navbar.php';
             <label for="playlist_name"><?= htmlspecialchars($t['form']['playlist_name'] ?? 'Nom de la célébration (ex: Messe du 15 Août)') ?></label>
             <div class="form-line"></div>
         </div>
-        <div class="form-group" style="--delay:0.2s; width:150px;">
+        <div class="form-group playlist-form-date" style="--delay:0.2s;">
             <input type="date" name="event_date" id="event_date" placeholder=" ">
             <label for="event_date"><?= htmlspecialchars($t['form']['event_date'] ?? 'Date') ?></label>
             <div class="form-line"></div>
@@ -185,15 +176,15 @@ include 'includes/navbar.php';
                 <h3><a href="project.php?id=<?= $f['id'] ?>&lang=<?= $lang ?>"><?= htmlspecialchars($f['title']) ?></a></h3>
                 <p>Par <?= htmlspecialchars($f['publisher']) ?></p>
                 <?php if (!empty($playlists)): ?>
-                <form method="post" action="playlist.php?id=<?= (int)($playlists[0]['id']) ?>&lang=<?= $lang ?>" style="margin-top:5px;">
+                <form method="post" action="playlist.php?id=<?= (int)($playlists[0]['id']) ?>&lang=<?= $lang ?>" class="favorite-add-form">
                   <?php csrf_input(); ?>
-                  <select name="target_playlist_id" onchange="this.form.action='playlist.php?id='+this.value+'&lang=<?= $lang ?>';" style="padding:2px; font-size:0.8rem;">
+                  <select name="target_playlist_id" class="favorite-add-select" onchange="this.form.action='playlist.php?id='+this.value+'&lang=<?= $lang ?>';">
                     <?php foreach ($playlists as $pl): ?>
                       <option value="<?= $pl['id'] ?>"><?= htmlspecialchars($pl['name']) ?></option>
                     <?php endforeach; ?>
                   </select>
                   <input type="hidden" name="project_id" value="<?= (int) $f['id'] ?>">
-                  <button type="submit" name="add_item" class="btn-secondary btn-no-spinner" style="font-size:0.8rem;">➕ Liste</button>
+                  <button type="submit" name="add_item" class="btn-secondary btn-no-spinner favorite-add-button">➕ Liste</button>
                 </form>
                 <?php endif; ?>
             </div>

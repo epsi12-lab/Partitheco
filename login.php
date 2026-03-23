@@ -3,22 +3,21 @@
 session_start();
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
+use App\AuthService;
 use App\Database;
-use App\User;
-
 
 if (isset($_SESSION['user'])) {
   header('Location: admin.php');
   exit;
 }
 
-if (empty($_SESSION['user']) && !empty($_COOKIE['remember_user'])) {
+if (empty($_SESSION['user']) && !empty($_COOKIE['remember_token'])) {
   $db = new Database();
-  $u  = new User($db->getPDO());
-  
-  $user = $u->findByUsername($_COOKIE['remember_user']);
+  $authService = new AuthService($db->getPDO());
+
+  $user = $authService->loginFromRememberToken($_COOKIE['remember_token']);
   if ($user) {
-     $_SESSION['user'] = $user;
+     $authService->startAuthenticatedSession($user);
      header('Location: admin.php');
      exit;
   }
@@ -34,24 +33,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rememberMe   = !empty($_POST['remember_me']);
 
     $db      = new Database();
-    $userObj = new User($db->getPDO());
-    $user    = $userObj->login($username, $password);
+    $authService = new AuthService($db->getPDO());
+    $user    = $authService->login($username, $password);
 
     if ($user) {
-        $_SESSION['user'] = $user;
+        $authService->startAuthenticatedSession($user);
 
         if ($rememberMe) {
+          $rememberToken = $authService->issueRememberToken((int) $user['id']);
           setcookie(
-              'remember_user',
-              $user['username'],
+              'remember_token',
+              $rememberToken,
               [
-                'expires'  => time() + 60*60, // 1 heure
+                'expires'  => time() + 60 * 60 * 24 * 30,
                 'path'     => '/',
                 'secure'   => isset($_SERVER['HTTPS']),
                 'httponly' => true,
                 'samesite' => 'Lax',
               ]
           );
+        } elseif (!empty($_COOKIE['remember_token'])) {
+          $authService->revokeRememberToken($_COOKIE['remember_token']);
+          setcookie('remember_token', '', time() - 3600, '/');
         }
         header('Location: admin.php');
         exit;

@@ -4,50 +4,23 @@ require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 use App\Database;
-use App\Project;
+use App\CatalogService;
+use App\ProjectRepository;
 
 $db = new Database();
 $pdo = $db->getPDO();
-$projectObj = new Project($pdo);
+$projectRepository = new ProjectRepository($pdo);
+$catalogService = new CatalogService();
 
 // Récupérer les paramètres de filtrage
 $searchQuery = $_GET['q'] ?? '';
 $momentFilter = $_GET['moment'] ?? '';
 $tempsFilter = $_GET['temps'] ?? '';
+$voixFilter = $_GET['voix'] ?? '';
 
-// Moments de la messe
-$moments = [
-    ['slug' => 'Entrée', 'nom' => 'Entrée', 'icon' => '🚪'],
-    ['slug' => 'Kyrie', 'nom' => 'Kyrie', 'icon' => '🙏'],
-    ['slug' => 'Gloria', 'nom' => 'Gloria', 'icon' => '✨'],
-    ['slug' => 'Psaume', 'nom' => 'Psaume', 'icon' => '📖'],
-    ['slug' => 'Acclamation', 'nom' => 'Acclamation', 'icon' => '🎵'],
-    ['slug' => 'Credo', 'nom' => 'Credo', 'icon' => '✝️'],
-    ['slug' => 'Offertoire', 'nom' => 'Offertoire', 'icon' => '🍞'],
-    ['slug' => 'Sanctus', 'nom' => 'Sanctus', 'icon' => '👼'],
-    ['slug' => 'Agnus Dei', 'nom' => 'Agnus Dei', 'icon' => '🐑'],
-    ['slug' => 'Communion', 'nom' => 'Communion', 'icon' => '🍷'],
-    ['slug' => 'Envoi', 'nom' => 'Envoi', 'icon' => '🕊️'],
-    ['slug' => 'Marie', 'nom' => 'Chants à Marie', 'icon' => '💙'],
-];
-
-// Temps liturgiques
-$tempsLiturgiques = [
-    ['slug' => 'Avent', 'nom' => 'Avent'],
-    ['slug' => 'Noël', 'nom' => 'Noël'],
-    ['slug' => 'Carême', 'nom' => 'Carême'],
-    ['slug' => 'Pâques', 'nom' => 'Pâques'],
-    ['slug' => 'Ordinaire', 'nom' => 'Temps Ordinaire'],
-];
-
-// Types de voix
-$voixOptions = [
-    ['slug' => 'unisson', 'nom' => 'Unisson'],
-    ['slug' => 'satb', 'nom' => 'SATB'],
-    ['slug' => 'solo', 'nom' => 'Solo'],
-    ['slug' => '2voix', 'nom' => '2 voix'],
-    ['slug' => '3voix', 'nom' => '3 voix'],
-];
+$moments = $catalogService->getPublicationMoments();
+$tempsLiturgiques = $catalogService->getTempsLiturgiques();
+$voixOptions = $catalogService->getVoixOptions();
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
@@ -106,7 +79,7 @@ include __DIR__ . '/includes/navbar.php';
           <select id="voixFilter" name="voix">
             <option value="">Toutes les voix</option>
             <?php foreach ($voixOptions as $v): ?>
-              <option value="<?= $v['slug'] ?>"><?= $v['nom'] ?></option>
+              <option value="<?= $v['slug'] ?>" <?= $voixFilter === $v['slug'] ? 'selected' : '' ?>><?= $v['nom'] ?></option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -145,6 +118,9 @@ include __DIR__ . '/includes/navbar.php';
         <?php endif; ?>
         <?php if ($tempsFilter): ?>
           <span class="filter-tag"><?= htmlspecialchars($tempsFilter) ?></span>
+        <?php endif; ?>
+        <?php if ($voixFilter): ?>
+          <span class="filter-tag"><?= htmlspecialchars($voixFilter) ?></span>
         <?php endif; ?>
       </div>
     <?php endif; ?>

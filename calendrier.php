@@ -3,39 +3,18 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
-use App\Database;
-use App\Project;
-
-$db = new Database();
-$pdo = $db->getPDO();
-$projectObj = new Project($pdo);
+use App\LiturgicalCalendar;
 
 $currentMonth = (int)($_GET['month'] ?? date('n'));
 $currentYear = (int)($_GET['year'] ?? date('Y'));
 
-$moisFr = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-
-// Calcul du temps liturgique approximatif par date
-function getTempsLiturgique($date) {
-    $month = (int)$date->format('n');
-    $day = (int)$date->format('j');
-    
-    // Avent: ~4 semaines avant Noël (fin novembre - 24 décembre)
-    if (($month == 11 && $day >= 27) || ($month == 12 && $day <= 24)) return 'Avent';
-    // Noël: 25 décembre - 6 janvier
-    if (($month == 12 && $day >= 25) || ($month == 1 && $day <= 6)) return 'Noël';
-    // Carême: ~40 jours avant Pâques (simplifié: mi-février à fin mars)
-    if (($month == 2 && $day >= 14) || $month == 3 || ($month == 4 && $day <= 10)) return 'Carême';
-    // Pâques: avril-mai (simplifié)
-    if (($month == 4 && $day >= 11) || ($month == 5 && $day <= 20)) return 'Pâques';
-    
-    return 'Ordinaire';
-}
+$moisFr = ['', 'Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'];
 
 // Générer le calendrier
 $firstDay = new DateTime("$currentYear-$currentMonth-01");
 $daysInMonth = (int)$firstDay->format('t');
 $startDayOfWeek = (int)$firstDay->format('N'); // 1=Lundi, 7=Dimanche
+$monthData = LiturgicalCalendar::getMonthData($currentYear, $currentMonth);
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
@@ -86,11 +65,11 @@ include __DIR__ . '/includes/navbar.php';
 
     // Jours du mois
     for ($day = 1; $day <= $daysInMonth; $day++):
-      $date = new DateTime("$currentYear-$currentMonth-$day");
-      $dayOfWeek = (int)$date->format('N');
-      $temps = getTempsLiturgique($date);
+      $date = new DateTime($monthData[$day]['date']);
+      $dayOfWeek = (int)$monthData[$day]['dayOfWeek'];
+      $temps = $monthData[$day]['season'];
       $tempsClass = strtolower($temps);
-      $isDimanche = ($dayOfWeek === 7);
+      $isDimanche = (bool)$monthData[$day]['isSunday'];
       $isToday = ($date->format('Y-m-d') === date('Y-m-d'));
     ?>
       <div class="day-cell <?= $tempsClass ?> <?= $isDimanche ? 'dimanche' : '' ?> <?= $isToday ? 'today' : '' ?>"

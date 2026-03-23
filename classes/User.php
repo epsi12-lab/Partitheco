@@ -6,38 +6,28 @@ namespace App;
 use PDO;
 
 class User {
-    private PDO $pdo;
+    private UserRepository $repository;
 
     public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+        $this->repository = new UserRepository($pdo);
+        $this->repository->initRememberTokensTable();
     }
 
     public function register(string $username, string $email, string $password, ?string $firstName = null, ?string $lastName = null, ?string $paroisse = null, ?string $roleChoral = null): bool {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare("
-            INSERT INTO users (username, email, password, first_name, last_name, paroisse, role_choral)
-            VALUES (:username, :email, :password, :first_name, :last_name, :paroisse, :role_choral)
-        ");
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->bindValue(':password', $hashedPassword, PDO::PARAM_STR);
-        $stmt->bindValue(':first_name', $firstName, PDO::PARAM_STR);
-        $stmt->bindValue(':last_name', $lastName, PDO::PARAM_STR);
-        $stmt->bindValue(':paroisse', $paroisse, PDO::PARAM_STR);
-        $stmt->bindValue(':role_choral', $roleChoral, PDO::PARAM_STR);
-        return $stmt->execute();
+        return $this->repository->register(
+            $username,
+            $email,
+            $hashedPassword,
+            $firstName,
+            $lastName,
+            $paroisse,
+            $roleChoral
+        );
     }
 
     public function login(string $username, string $password) {
-        $stmt = $this->pdo->prepare("
-            SELECT id, username, email, password, first_name, last_name, paroisse, role_choral
-            FROM users
-            WHERE username = :username
-            LIMIT 1
-        ");
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $this->repository->findForLogin($username);
 
         if ($user && password_verify($password, $user['password'])) {
             unset($user['password']);
@@ -47,27 +37,29 @@ class User {
     }
 
     public function findByUsername(string $username) {
-        $stmt = $this->pdo->prepare("
-            SELECT id, username, email, first_name, last_name, paroisse, role_choral
-            FROM users
-            WHERE username = :username
-            LIMIT 1
-        ");
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $this->repository->findByUsername($username);
     }
 
     public function updateProfile(int $userId, ?string $paroisse, ?string $role_choral): bool {
-        $stmt = $this->pdo->prepare("
-            UPDATE users
-            SET paroisse = :paroisse, role_choral = :role
-            WHERE id = :id
-        ");
-        $stmt->bindValue(':paroisse', $paroisse, PDO::PARAM_STR);
-        $stmt->bindValue(':role',     $role_choral, PDO::PARAM_STR);
-        $stmt->bindValue(':id',       $userId,      PDO::PARAM_INT);
-        return $stmt->execute();
+        return $this->repository->updateProfile($userId, $paroisse, $role_choral);
+    }
+
+    public function createRememberToken(int $userId): string {
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $expiresAt = (new \DateTimeImmutable('+30 days'))->format('Y-m-d H:i:s');
+
+        $this->repository->createRememberToken($userId, $tokenHash, $expiresAt);
+
+        return $token;
+    }
+
+    public function findByRememberToken(string $token) {
+        $this->repository->clearExpiredRememberTokens();
+        return $this->repository->findByRememberTokenHash(hash('sha256', $token));
+    }
+
+    public function deleteRememberToken(string $token): bool {
+        return $this->repository->deleteRememberTokenHash(hash('sha256', $token));
     }
 }
-?>

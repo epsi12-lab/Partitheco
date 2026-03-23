@@ -3,30 +3,25 @@
 require_once __DIR__ . '/../../bootstrap.php';
 
 use App\Database;
-use App\Project;
-
-header('Content-Type: application/json; charset=utf-8');
+use App\ProjectRepository;
 
 try {
     $db      = new Database();
     $pdo     = $db->getPDO();
-    $project = new Project($pdo);
+    $projectRepository = new ProjectRepository($pdo);
 
     $q = trim($_GET['q'] ?? '');
     $moment = trim($_GET['moment'] ?? '') ?: null;
     $temps = trim($_GET['temps'] ?? '') ?: null;
+    $voix = trim($_GET['voix'] ?? '') ?: null;
 
-    if ($q === '' && $moment === null && $temps === null) {
-        $results = $project->getProjects(1000, 0);
+    if ($q === '' && $moment === null && $temps === null && $voix === null) {
+        $results = $projectRepository->getProjects(1000, 0);
     } else {
-        $results = $project->searchProjects($q, $moment, $temps);
+        $results = $projectRepository->search($q, $moment, $temps, $voix);
     }
 
-    echo json_encode($results);
+    json_response($results);
 } catch (\Throwable $e) {
-    http_response_code(500);
-    echo json_encode([
-        'error'   => true,
-        'message' => $e->getMessage()
-    ]);
+    json_error('Erreur interne', 500);
 }

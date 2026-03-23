@@ -38,6 +38,21 @@ function csrf_input(): void {
 }
 
 /**
+ * Expose le jeton CSRF pour les requetes AJAX.
+ */
+function csrf_meta_tag(): void {
+    echo '<meta name="csrf-token" content="' . htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') . '">';
+}
+
+/**
+ * Retourne le jeton CSRF transmis via en-tete AJAX.
+ */
+function get_csrf_header_token(): ?string {
+    $header = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+    return is_string($header) && $header !== '' ? $header : null;
+}
+
+/**
  * Redirige vers la page d'erreur.
  * @param string $code
  * @param string|null $message

@@ -53,10 +53,10 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: flex-end;
-        height: 10vh;
-        min-height: 150px;
-        padding: 0;
+        align-items: center;
+        height: auto;
+        min-height: 96px;
+        padding: 0.75rem 1rem;
         position: relative;
     }
     .navbar-menu {
@@ -79,33 +79,56 @@
     .navbar-menu.active {
         display: flex !important;
     }
+    .navbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
+    }
     .navbar-menu li {
         width: 100%;
         text-align: left;
     }
-    .navbar-menu li a {
+    .navbar-menu li a,
+    .navbar-menu .dropbtn {
         color: var(--text-color) !important;
         padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--border-color);
+        text-align: left !important;
+        border-radius: 0 !important;
+    }
+    .navbar-menu .dropdown {
+        width: 100%;
     }
     .navbar-menu .dropdown-content {
         position: static !important;
-        display: block !important;
+        display: none !important;
         box-shadow: none !important;
         padding-left: 1.5rem !important;
         background: transparent !important;
+        min-width: 0 !important;
+        border: none !important;
+    }
+    .navbar-menu .dropdown-content.mobile-open {
+        display: block !important;
     }
     .burger-menu {
         display: block !important;
+        margin: 0 !important;
+        align-self: center;
+        flex: 0 0 auto;
     }
     .navbar-brand {
-        margin-bottom: 0.5rem !important;
+        margin: 0 !important;
     }
     .navbar-lang {
-        margin-bottom: 0.5rem !important;
+        margin: 0 !important;
+        gap: 0.4rem !important;
+        justify-content: flex-end !important;
+        flex-wrap: nowrap !important;
     }
     .navbar-brand .navbar-logo {
-        max-height: 100px;
+        max-height: 72px;
     }
     
     /* Media */
@@ -231,7 +254,8 @@
     /* Forms */
     .animated-form {
         padding: 1.5rem !important;
-        margin: 1rem !important;
+        margin: 1rem auto !important;
+        width: calc(100% - 2rem) !important;
     }
     .form-group {
         margin-bottom: 1.25rem !important;
@@ -240,6 +264,31 @@
     /* Liturgical tags */
     .liturgical-tags {
         justify-content: center !important;
+    }
+
+    .universal-modal .modal-content {
+        width: calc(100vw - 1.5rem) !important;
+        max-height: calc(100vh - 1.5rem) !important;
+        margin: 0.75rem !important;
+        padding: 0.75rem !important;
+    }
+
+    .modal-embed {
+        width: 100% !important;
+        height: min(70vh, 520px) !important;
+    }
+
+    .modal-image {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 70vh !important;
+        border-radius: 4px;
+        object-fit: contain;
+    }
+
+    .project-detail h1 form[method="post"] {
+        display: block !important;
+        margin: 0.75rem auto 0 !important;
     }
 }
 
@@ -313,6 +362,34 @@
 
 /* === PHONES === */
 @media (max-width: 480px) {
+    .main_navbar {
+        min-height: 84px !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+    .navbar-actions {
+        gap: 0.35rem !important;
+    }
+    .navbar-brand .navbar-logo {
+        max-height: 60px !important;
+    }
+    .navbar-lang a {
+        font-size: 1.15rem !important;
+    }
+    .theme-toggle {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0.35rem !important;
+        font-size: 1rem !important;
+    }
+    .burger-menu {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 1.3rem !important;
+    }
+    .navbar-menu li a,
+    .navbar-menu .dropbtn {
+        padding: 0.65rem 0.75rem !important;
+    }
+
     /* Buttons */
     .btn-primary,
     .btn-secondary,
@@ -381,6 +458,102 @@
     .filter-actions a {
         width: 100% !important;
         text-align: center !important;
+    }
+
+    .project-detail {
+        padding: 1rem 0.75rem !important;
+    }
+    .project-meta {
+        gap: 0.5rem !important;
+    }
+    .project-meta li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .modal-embed {
+        height: min(62vh, 420px) !important;
+    }
+
+    .playlist-inline-actions,
+    .playlist-share-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .playlist-share-input {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .shared-playlist-table-wrapper,
+    .playlist-table-wrapper {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .shared-playlist-note,
+    .shared-playlist-empty,
+    .shared-playlist-print {
+        max-width: 100% !important;
+        padding-inline: 1rem !important;
+    }
+
+    .calendrier-grid {
+        padding: 0.5rem !important;
+        gap: 2px !important;
+        font-size: 0.75rem !important;
+    }
+    .day-cell {
+        min-height: 46px !important;
+        padding: 0.35rem !important;
+    }
+    .day-number {
+        font-size: 0.85rem !important;
+    }
+    .day-header {
+        font-size: 0.72rem !important;
+        padding: 0.35rem !important;
+    }
+
+    .livret-form .form-group {
+        min-width: 100% !important;
+    }
+    .livret-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+    }
+    .livret-item-tags {
+        flex-wrap: wrap !important;
+    }
+    .livret-actions {
+        flex-direction: column !important;
+    }
+    .livret-actions .btn-primary,
+    .livret-actions .btn-secondary {
+        width: 100% !important;
+    }
+    .calendrier-nav {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        text-align: center !important;
+    }
+    .calendrier-nav h2 {
+        margin: 0 !important;
+        font-size: 1.25rem !important;
+    }
+    .calendrier-legend {
+        justify-content: flex-start !important;
+        gap: 0.5rem !important;
+    }
+    .legend-item {
+        font-size: 0.75rem !important;
+    }
+    .btn-nav {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
     }
     
     /* Quick nav pills - scroll horizontal */

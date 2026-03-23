@@ -6,7 +6,8 @@ require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 use App\Database;
-use App\Project;
+use App\CatalogService;
+use App\ProjectRepository;
 use App\Subscriber;
 
 // Newsletter
@@ -21,65 +22,10 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['newsletter_submit'])) {
 
 $db         = new Database();
 $pdo        = $db->getPDO();
-$projectObj = new Project($pdo);
-
-// Dernières publications
-$projects = $projectObj->getProjects(6, 0);
-
-// Chant du jour (aléatoire parmi les publications)
-$allProjects = $projectObj->getProjects(100, 0);
-$chantDuJour = !empty($allProjects) ? $allProjects[array_rand($allProjects)] : null;
-
-// Suggestions pour dimanche prochain
-try {
-    $season = \App\LiturgicalCalendar::nextSundaySeason();
-    $suggestions = $projectObj->getByTemps($season, 4);
-} catch (\Throwable $e) {
-    $season = 'Ordinaire';
-    $suggestions = [];
-}
-
-// Prochains dimanches
-$prochainsDimanches = [];
-$today = new DateTime();
-for ($i = 0; $i < 3; $i++) {
-    $sunday = clone $today;
-    $sunday->modify('next sunday');
-    $sunday->modify("+{$i} week");
-    $prochainsDimanches[] = [
-        'date' => $sunday->format('d/m/Y'),
-        'jour' => $sunday->format('l'),
-        'temps' => $season
-    ];
-}
-
-// Statistiques
-$totalPartitions = count($allProjects);
-
-// Moments de la messe
-$moments = [
-    ['slug' => 'entree', 'nom' => 'Entrée', 'icon' => '🚪'],
-    ['slug' => 'kyrie', 'nom' => 'Kyrie', 'icon' => '🙏'],
-    ['slug' => 'gloria', 'nom' => 'Gloria', 'icon' => '✨'],
-    ['slug' => 'psaume', 'nom' => 'Psaume', 'icon' => '📖'],
-    ['slug' => 'acclamation', 'nom' => 'Acclamation', 'icon' => '🎵'],
-    ['slug' => 'credo', 'nom' => 'Credo', 'icon' => '✝️'],
-    ['slug' => 'offertoire', 'nom' => 'Offertoire', 'icon' => '🍞'],
-    ['slug' => 'sanctus', 'nom' => 'Sanctus', 'icon' => '👼'],
-    ['slug' => 'agnus', 'nom' => 'Agnus Dei', 'icon' => '🐑'],
-    ['slug' => 'communion', 'nom' => 'Communion', 'icon' => '🍷'],
-    ['slug' => 'envoi', 'nom' => 'Envoi', 'icon' => '🕊️'],
-    ['slug' => 'marie', 'nom' => 'Chants à Marie', 'icon' => '💙'],
-];
-
-// Temps liturgiques
-$tempsLiturgiques = [
-    ['slug' => 'avent', 'nom' => 'Avent'],
-    ['slug' => 'noel', 'nom' => 'Noël'],
-    ['slug' => 'careme', 'nom' => 'Carême'],
-    ['slug' => 'paques', 'nom' => 'Pâques'],
-    ['slug' => 'ordinaire', 'nom' => 'Temps Ordinaire'],
-];
+$projectRepository = new ProjectRepository($pdo);
+$catalogService = new CatalogService();
+$homeData = $catalogService->buildHomePageData($projectRepository);
+extract($homeData, EXTR_SKIP);
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';

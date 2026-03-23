@@ -10,6 +10,10 @@
             "App\\": "classes/"
         }
     },
+    "scripts": {
+        "lint": "php scripts/lint.php",
+        "test": "php tests/run.php"
+    },
     "authors": [
         {
             "name": "Junie",

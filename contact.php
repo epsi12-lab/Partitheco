@@ -8,6 +8,8 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
+use App\ContactFormService;
+
 $errors  = [];
 $success = false;
 $name    = $_POST['name']    ?? '';
@@ -18,24 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         redirect_error('403', 'Action non autorisée (CSRF).');
     }
-    if ($name === '') {
-        $errors[] = $t['contact']['error_name'];
-    } elseif (strlen($name) > 100) {
-        $errors[] = $t['contact']['error_name_length'];
-    }
-    if ($email === '') {
-        $errors[] = $t['contact']['error_email'];
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = $t['contact']['error_email_invalid'];
-    }
-    if ($message === '') {
-        $errors[] = $t['contact']['error_message'];
-    } elseif (strlen($message) > 1000) {
-        $errors[] = $t['contact']['error_message_length'];
-    }
-    if (empty($errors)) {
-        $success = true;
-    }
+    $contactFormService = new ContactFormService();
+    $result = $contactFormService->validate($_POST, $t['contact']);
+    $errors = $result['errors'];
+    $success = $result['success'];
+    $name = $result['data']['name'];
+    $email = $result['data']['email'];
+    $message = $result['data']['message'];
 }
 
 include 'includes/header.php';

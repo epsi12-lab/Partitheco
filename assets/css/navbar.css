@@ -5,7 +5,6 @@
 .main_navbar {
     position: relative;
     padding: 0;
-    height: 10vh;
     min-height: 180px;
     background: linear-gradient(135deg, var(--color-lit-night) 0%, #0d1a2d 100%);
     animation: slideDown 0.5s ease-out;
@@ -13,6 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    flex-wrap: wrap;
 }
 
 .navbar-brand {
@@ -45,6 +45,14 @@
     width: auto;
     max-width: none;
     padding: 0;
+    flex-wrap: wrap;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 1.5rem 1rem 0;
 }
 
 .navbar-menu li {
@@ -60,6 +68,12 @@
     font-weight: 500;
     border-radius: 6px;
     transition: all 0.3s ease;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    font: inherit;
 }
 
 .navbar-menu li a:hover,
@@ -70,10 +84,11 @@
 
 .navbar-lang {
     position: relative;
-    margin: 0 1.5rem 1rem 0;
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .navbar-lang a {
@@ -119,8 +134,6 @@
     color: #fff;
     font-size: 1.5rem;
     cursor: pointer;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
     transition: background 0.3s;

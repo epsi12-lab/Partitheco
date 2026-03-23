@@ -5,10 +5,15 @@
   <button id="backToTop" title="Haut de page">↑</button>
 
   <div class="footer-container">
-
-    <div class="footer-info">
+    <div class="footer-branding">
+      <div class="footer-info">
       <h2>PARTITHECO</h2>
       <h4>Music Scores</h4>
+      </div>
+
+      <div class="footer-about">
+        <a href="about.php?lang=<?= $lang ?? 'fr' ?>"><?= htmlspecialchars($t['nav']['about'] ?? 'À propos') ?></a>
+      </div>
     </div>
 
     <div class="footer-social">
@@ -24,10 +29,6 @@
       <a href="https://www.facebook.com/" target="_blank" rel="noopener">
         <img src="assets/static/facebook-brands.svg" alt="Facebook">
       </a>
-    </div>
-
-    <div class="footer-about">
-      <a href="about.php?lang=<?= $lang ?? 'fr' ?>"><?= htmlspecialchars($t['nav']['about'] ?? 'À propos') ?></a>
     </div>
 
     <div class="footer-credit">

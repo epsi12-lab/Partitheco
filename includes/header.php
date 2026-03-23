@@ -13,6 +13,7 @@ require_once __DIR__ . '/../assets/locales/trad.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a2a44">
     <meta name="description" content="Partithéco - Votre bibliothèque de partitions liturgiques">
+    <?php csrf_meta_tag(); ?>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/assets/img/icon-192.png">
     <title>Partithéco</title>

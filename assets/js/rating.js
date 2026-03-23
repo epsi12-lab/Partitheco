@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch('/api/rate.php', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': window.getCsrfToken?.() || ''
+                    },
                     body: JSON.stringify({ project_id: parseInt(projectId), score })
                 });
 

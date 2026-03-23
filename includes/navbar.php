@@ -34,7 +34,7 @@ if (!isset($lang)) {
       <a href="publications.php?lang=<?= htmlspecialchars($lang) ?>">📚 Publications</a>
     </li>
     <li class="dropdown">
-      <span class="dropbtn">🎵 Outils</span>
+      <button type="button" class="dropbtn" aria-expanded="false">🎵 Outils</button>
       <ul class="dropdown-content">
         <li><a href="calendrier.php?lang=<?= htmlspecialchars($lang) ?>">📅 Calendrier</a></li>
         <li><a href="livrets.php?lang=<?= htmlspecialchars($lang) ?>">📖 Livrets</a></li>
@@ -54,9 +54,9 @@ if (!isset($lang)) {
       </li>
     <?php else: ?>
       <li class="dropdown">
-        <span class="dropbtn">
+        <button type="button" class="dropbtn" aria-expanded="false">
           <?= htmlspecialchars($t['nav']['login'] ?? 'Connexion') ?>
-        </span>
+        </button>
         <ul class="dropdown-content">
           <li>
             <a href="login.php?lang=<?= htmlspecialchars($lang) ?>">
@@ -73,16 +73,18 @@ if (!isset($lang)) {
     <?php endif; ?>
   </ul>
 
-  <div class="navbar-lang">
-    <button class="theme-toggle" id="themeToggle" title="Changer de thème">
-      <span class="sun">☀️</span>
-      <span class="moon">🌙</span>
-    </button>
-    <a href="<?= htmlspecialchars($urlFr) ?>" aria-label="Passer en français">🇫🇷</a>
-    <a href="<?= htmlspecialchars($urlEn) ?>" aria-label="Switch to English">🇬🇧</a>
-  </div>
+  <div class="navbar-actions">
+    <div class="navbar-lang">
+      <button class="theme-toggle" id="themeToggle" title="Changer de thème">
+        <span class="sun">☀️</span>
+        <span class="moon">🌙</span>
+      </button>
+      <a href="<?= htmlspecialchars($urlFr) ?>" aria-label="Passer en français">🇫🇷</a>
+      <a href="<?= htmlspecialchars($urlEn) ?>" aria-label="Switch to English">🇬🇧</a>
+    </div>
 
-  <button class="burger-menu" id="burgerMenu" aria-label="Ouvrir le menu">
-    ☰
-  </button>
+    <button class="burger-menu" id="burgerMenu" aria-label="Ouvrir le menu" aria-controls="navbarMenu" aria-expanded="false">
+      ☰
+    </button>
+  </div>
 </nav>

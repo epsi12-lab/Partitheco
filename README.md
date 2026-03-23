@@ -72,6 +72,10 @@ composer install
 cp .env.example .env
 # Éditer .env avec vos paramètres
 
+# Vérifier le projet
+composer lint
+composer test
+
 # Lancer le serveur
 php -S localhost:8000
 ```
@@ -79,6 +83,8 @@ php -S localhost:8000
 ### Variables d'environnement
 
 ```env
+BASE_URL=http://localhost:8000
+
 # Base de données (PostgreSQL pour production)
 DB_HOST=aws-1-eu-west-1.pooler.supabase.com
 DB_PORT=5432
@@ -88,6 +94,22 @@ DB_PASS=votre_mot_de_passe
 
 # Cloudinary (optionnel)
 CLOUDINARY_URL=cloudinary://...
+
+# OpenWeather (optionnel)
+OPENWEATHER_API_KEY=
+
+# Politique CSP personnalisée (optionnel)
+CONTENT_SECURITY_POLICY=
+```
+
+### Commandes utiles
+
+```bash
+# Vérification syntaxique de tout le projet
+composer lint
+
+# Tests locaux
+composer test
 ```
 
 ---
@@ -96,14 +118,17 @@ CLOUDINARY_URL=cloudinary://...
 
 ```
 Partitheco/
+├── .github/workflows/   # CI GitHub Actions
 ├── api/                 # Endpoints JSON
 ├── assets/
 │   ├── css/            # Styles (thème liturgique)
 │   ├── js/             # Scripts
 │   ├── locales/        # Traductions (fr, en)
 │   └── static/         # Images statiques
-├── classes/            # Classes PHP (Database, User, Project...)
+├── classes/            # Classes PHP (repositories, services, modeles)
 ├── includes/           # Composants (navbar, footer)
+├── scripts/            # Outils de verification locaux
+├── tests/              # Runner et tests locaux
 ├── vendor/             # Dépendances Composer
 ├── bootstrap.php       # Initialisation
 ├── index.php           # Page d'accueil
@@ -126,4 +151,4 @@ Partitheco/
 
 ---
 
-*Dernière mise à jour : 27 février 2026*
+*Dernière mise à jour : 20 mars 2026*

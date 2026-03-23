@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchInput');
   const momentFilter = document.getElementById('momentFilter');
   const tempsFilter  = document.getElementById('tempsFilter');
+  const voixFilter = document.getElementById('voixFilter');
   const lang        = new URLSearchParams(location.search).get('lang') || 'fr';
 
   let offset = 0;
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSearch = '';
   let currentMoment = '';
   let currentTemps = '';
+  let currentVoix = '';
 
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Observer pour l'Infinite Scroll
   const scrollObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !loading && !allLoaded && currentSearch === '' && currentMoment === '' && currentTemps === '') {
+    if (entries[0].isIntersecting && !loading && !allLoaded && currentSearch === '' && currentMoment === '' && currentTemps === '' && currentVoix === '') {
       loadMore();
     }
   }, { threshold: 0.1 });
@@ -109,12 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const q = searchInput.value.trim();
     const moment = momentFilter.value;
     const temps = tempsFilter.value;
+    const voix = voixFilter?.value || '';
     
     currentSearch = q;
     currentMoment = moment;
     currentTemps = temps;
+    currentVoix = voix;
     
-    if (q === '' && moment === '' && temps === '') {
+    if (q === '' && moment === '' && temps === '' && voix === '') {
       offset = 0;
       allLoaded = false;
       render([]);
@@ -126,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (q) url += `&q=${encodeURIComponent(q)}`;
         if (moment) url += `&moment=${encodeURIComponent(moment)}`;
         if (temps) url += `&temps=${encodeURIComponent(temps)}`;
+        if (voix) url += `&voix=${encodeURIComponent(voix)}`;
         
         const resp = await fetch(url);
         const data = await resp.json();
@@ -143,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   momentFilter?.addEventListener('change', performSearch);
   tempsFilter?.addEventListener('change', performSearch);
+  voixFilter?.addEventListener('change', performSearch);
 
   // Init
   render([]);

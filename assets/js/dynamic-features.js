@@ -216,10 +216,11 @@ function createAutocompleteContainer(input) {
 async function fetchSearchSuggestions(query, container, input) {
     try {
         const response = await fetch(`api/projects/search.php?q=${encodeURIComponent(query)}&limit=5`);
-        const data = await response.json();
+        const payload = await response.json();
+        const results = Array.isArray(payload) ? payload : (payload.data || []);
 
-        if (data.success && data.data.length > 0) {
-            container.innerHTML = data.data.map(item => `
+        if (results.length > 0) {
+            container.innerHTML = results.map(item => `
                 <a href="project.php?id=${item.id}" class="autocomplete-item" style="
                     display: block;
                     padding: 10px 15px;

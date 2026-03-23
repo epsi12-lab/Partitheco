@@ -1,21 +1,23 @@
 <?php
 // delete.php
+require_once __DIR__ . '/bootstrap.php';
 session_start();
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit;
-}
 
-$projectId = (int) ($_GET['id'] ?? 0);
+use App\Database;
+use App\ProjectRepository;
+
+require_auth_redirect();
+
+require_post_method();
+verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+
+$projectId = (int) ($_POST['id'] ?? 0);
 $lang      = $_GET['lang'] ?? 'fr';
 $userId    = $_SESSION['user']['id'];
 
-require_once 'classes/Database.php';
-require_once 'classes/Project.php';
-
 $db         = new Database();
-$projectObj = new Project($db->getPDO());
-$projectObj->deleteByUser($projectId, $userId);
+$projectRepository = new ProjectRepository($db->getPDO());
+$projectRepository->deleteByUser($projectId, $userId);
 
 header("Location: admin.php?lang=$lang");
 exit;

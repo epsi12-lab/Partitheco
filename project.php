@@ -5,88 +5,67 @@ require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 use App\Database;
-use App\Project;
-use App\Comment;
-use App\Favorite;
-use App\Download;
-use App\Rating;
+use App\ProjectPageService;
 
 $db         = new Database();
 $pdo        = $db->getPDO();
-$projectObj = new Project($pdo);
-$commentObj = new Comment($pdo);
-$favoriteObj = new Favorite($pdo);
-$downloadObj = new Download($pdo);
-$ratingObj = new Rating($pdo);
+$pageService = new ProjectPageService($pdo);
 
 if (!isset($_GET['id'])) {
     redirect_error('404', 'ID de projet manquant.');
 }
 $projectId = (int) $_GET['id'];
-
-$avgRating = $ratingObj->getAverageRating($projectId);
-$ratingCount = $ratingObj->getRatingCount($projectId);
-$userRating = isset($_SESSION['user']) ? $ratingObj->getUserRating($_SESSION['user']['id'], $projectId) : null;
-
-$project    = $projectObj->getProjectById($projectId);
-if (!$project) {
-    redirect_error('404', 'Projet introuvable.');
-}
-
-$isFavorite = false;
-if (isset($_SESSION['user'])) {
-    $isFavorite = $favoriteObj->isFavorite($_SESSION['user']['id'], $projectId);
-}
+$currentUser = $_SESSION['user'] ?? null;
+$pageData = $pageService->buildPageData($projectId, $currentUser);
+$project = $pageData['project'];
+$avgRating = $pageData['avgRating'];
+$ratingCount = $pageData['ratingCount'];
+$userRating = $pageData['userRating'];
+$isFavorite = $pageData['isFavorite'];
+$comments = $pageData['comments'];
+$downloadCount = $pageData['downloadCount'];
+$userPlaylists = $pageData['userPlaylists'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite_toggle'])) {
-    if (!isset($_SESSION['user'])) {
+    if (!$currentUser) {
         header('Location: login.php');
         exit;
     }
-    if ($isFavorite) {
-        $favoriteObj->remove($_SESSION['user']['id'], $projectId);
-    } else {
-        $favoriteObj->add($_SESSION['user']['id'], $projectId);
-    }
+    verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+    $pageService->toggleFavorite($projectId, $currentUser, $isFavorite);
     header("Location: project.php?id=$projectId&lang=$lang");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_submit'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        redirect_error('403', 'Action non autorisée (CSRF).');
-    }
-    $author  = trim($_POST['comment_author']  ?? '');
-    $content = trim($_POST['comment_content'] ?? '');
-    if ($author !== '' && $content !== '') {
-        $commentObj->insert($projectId, $author, $content);
+    verify_csrf_or_fail($_POST['csrf_token'] ?? null);
+    if ($pageService->addComment(
+        $projectId,
+        $_POST['comment_author'] ?? '',
+        $_POST['comment_content'] ?? ''
+    )) {
         header("Location: project.php?id=$projectId&lang=$lang");
         exit;
     }
 }
 
-$comments = $commentObj->getByProject($projectId);
-
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
 ?>
 <main class="project-detail">
-  <h1>
-    <?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?>
-    <form method="post" style="display:inline;">
-        <button type="submit" name="favorite_toggle" class="btn-favorite" title="<?= $isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' ?>">
-            <?= $isFavorite ? '★' : '☆' ?>
-        </button>
-    </form>
-    <?php if (isset($_SESSION['user'])): ?>
-      <?php 
-        $playlistObj = new App\Playlist($pdo);
-        $userPlaylists = $playlistObj->getByUser($_SESSION['user']['id']);
-      ?>
-      <?php if (!empty($userPlaylists)): ?>
-      <form method="post" action="playlist.php?id=<?= (int)($userPlaylists[0]['id']) ?>&lang=<?= $lang ?>" style="display:inline-block; margin-left: 10px;">
+  <div class="project-title-block">
+    <h1><?= htmlspecialchars($project['title'], ENT_NOQUOTES, 'UTF-8', false) ?></h1>
+    <div class="project-actions">
+      <form method="post" class="project-favorite-form">
+          <?php csrf_input(); ?>
+          <button type="submit" name="favorite_toggle" class="btn-favorite" title="<?= $isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' ?>">
+              <?= $isFavorite ? '★' : '☆' ?>
+          </button>
+      </form>
+      <?php if ($currentUser && !empty($userPlaylists)): ?>
+      <form method="post" action="playlist.php?id=<?= (int)($userPlaylists[0]['id']) ?>&lang=<?= $lang ?>" class="project-playlist-form">
         <?php csrf_input(); ?>
-        <select name="target_playlist_id" onchange="this.form.action='playlist.php?id='+this.value+'&lang=<?= $lang ?>';" style="padding:2px;">
+        <select name="target_playlist_id" class="project-playlist-select" onchange="this.form.action='playlist.php?id='+this.value+'&lang=<?= $lang ?>';">
           <?php foreach ($userPlaylists as $pl): ?>
             <option value="<?= $pl['id'] ?>"><?= htmlspecialchars($pl['name']) ?></option>
           <?php endforeach; ?>
@@ -95,8 +74,8 @@ include __DIR__ . '/includes/navbar.php';
         <button type="submit" name="add_item" class="btn-secondary btn-no-spinner" title="Ajouter à la liste">➕ Ajouter à la liste</button>
       </form>
       <?php endif; ?>
-    <?php endif; ?>
-  </h1>
+    </div>
+  </div>
 
   <!-- Système de notation -->
   <div class="rating-section" data-project-id="<?= $projectId ?>">
@@ -112,7 +91,7 @@ include __DIR__ . '/includes/navbar.php';
         Pas encore noté
       <?php endif; ?>
     </span>
-    <?php if (isset($_SESSION['user'])): ?>
+    <?php if ($currentUser): ?>
       <div class="user-rating">
         <span>Votre note :</span>
         <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -255,7 +234,7 @@ include __DIR__ . '/includes/navbar.php';
           </div>
           <div class="download-stats">
             <span>📥</span>
-            <span class="download-count"><?= $downloadObj->getCountByProject($projectId) ?></span>
+            <span class="download-count"><?= $downloadCount ?></span>
             <span>téléchargements</span>
           </div>
           <a href="api/download.php?id=<?= $projectId ?>&type=audio" class="btn-download" onclick="trackDownload(<?= $projectId ?>, 'audio')">

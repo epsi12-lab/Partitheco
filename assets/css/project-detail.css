@@ -9,6 +9,37 @@
     text-align:center; margin-bottom:1rem; max-width:800px;
     animation-delay:.2s;
 }
+
+.project-title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 800px;
+}
+
+.project-favorite-form,
+.project-playlist-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.project-playlist-select {
+    padding: 0.45rem 0.6rem;
+    max-width: 100%;
+}
   
 .project-date {
     font-style:italic; color:#666; text-align:center;
@@ -27,7 +58,7 @@
 .project-media {
     display: block;
     margin: 1.5rem auto;
-    width: 50%;
+    width: min(100%, 720px);
     max-width: 100%;
     max-height: 400px;
     height: auto;
@@ -45,7 +76,7 @@ video.project-media {
   height: auto;
   min-height: 100px;
   display: block;
-  width: 50%;
+  width: min(100%, 720px);
   max-width: 100%;
   margin: 1.5rem auto;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -57,5 +88,22 @@ video.project-media {
 
 .project-detail .pdf-icon {
     width: 150px;
+}
+
+.project-detail h1 form {
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .project-actions,
+    .project-playlist-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .project-playlist-form .btn-secondary,
+    .project-playlist-select {
+        width: 100%;
+    }
 }
   

@@ -4,23 +4,16 @@ require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
 use App\Database;
-use App\Playlist;
+use App\PlaylistSharingService;
 
 $token = trim($_GET['token'] ?? '');
-if ($token === '') {
-    redirect_error('404', 'Lien de partage invalide.');
-}
 
 $db          = new Database();
 $pdo         = $db->getPDO();
-$playlistObj = new Playlist($pdo);
-
-$playlist = $playlistObj->getByShareToken($token);
-if (!$playlist) {
-    redirect_error('404', 'Liste introuvable ou lien expiré.');
-}
-
-$items = $playlistObj->getItems($playlist['id']);
+$sharingService = new PlaylistSharingService($pdo);
+$sharedData = $sharingService->getSharedPlaylistByToken($token);
+$playlist = $sharedData['playlist'];
+$items = $sharedData['items'];
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
@@ -32,13 +25,13 @@ include __DIR__ . '/includes/navbar.php';
       — <small><?= (new DateTime($playlist['event_date']))->format('d/m/Y') ?></small>
     <?php endif; ?>
   </h1>
-  <p style="text-align:center; opacity:0.7;">Liste partagée en lecture seule</p>
+  <p class="shared-playlist-note" style="text-align:center; opacity:0.7;">Liste partagée en lecture seule</p>
 
   <?php if (empty($items)): ?>
-    <p style="text-align:center;">Cette liste ne contient aucun chant.</p>
+    <p class="shared-playlist-empty" style="text-align:center;">Cette liste ne contient aucun chant.</p>
   <?php else: ?>
-    <section style="max-width: 900px; margin: 1rem auto;">
-      <table style="width:100%; border-collapse: collapse;">
+    <section class="shared-playlist-table-wrapper" style="max-width: 900px; margin: 1rem auto;">
+      <table class="shared-playlist-table" style="width:100%; border-collapse: collapse;">
         <thead>
           <tr>
             <th style="text-align:left; padding:8px; border-bottom:2px solid var(--border-color);">#</th>
@@ -50,8 +43,8 @@ include __DIR__ . '/includes/navbar.php';
         <tbody>
           <?php foreach ($items as $idx => $it): ?>
             <tr>
-              <td style="padding:8px;"><?= $idx + 1 ?></td>
-              <td style="padding:8px;">
+              <td data-label="#" style="padding:8px;"><?= $idx + 1 ?></td>
+              <td data-label="Titre" style="padding:8px;">
                 <a href="project.php?id=<?= $it['id'] ?>&lang=<?= $lang ?>">
                   <?= htmlspecialchars($it['title']) ?>
                 </a>
@@ -59,15 +52,15 @@ include __DIR__ . '/includes/navbar.php';
                   <br><small style="opacity:0.6;"><?= htmlspecialchars($it['author']) ?></small>
                 <?php endif; ?>
               </td>
-              <td style="padding:8px;"><?= htmlspecialchars($it['moment_messe'] ?? '') ?></td>
-              <td style="padding:8px;"><?= htmlspecialchars($it['note'] ?? '') ?></td>
+              <td data-label="Moment" style="padding:8px;"><?= htmlspecialchars($it['moment_messe'] ?? '') ?></td>
+              <td data-label="Note" style="padding:8px;"><?= htmlspecialchars($it['note'] ?? '') ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
     </section>
 
-    <p style="text-align:center; margin-top:2rem;">
+    <p class="shared-playlist-print" style="text-align:center; margin-top:2rem;">
       <button type="button" class="btn-primary" onclick="window.print();">🖨️ Imprimer cette liste</button>
     </p>
   <?php endif; ?>

@@ -55,7 +55,7 @@ class MediaUploader {
      * Upload local (fallback)
      */
     private function uploadLocal(array $file): ?array {
-        $filename = time() . '_' . basename($file['name']);
+        $filename = time() . '_' . bin2hex(random_bytes(8)) . '_' . basename($file['name']);
         $targetPath = $this->localPath . $filename;
         
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
@@ -151,6 +151,52 @@ class MediaUploader {
         $mime = $finfo->file($file['tmp_name']);
         
         return in_array($mime, $allowedMimes);
+    }
+
+    /**
+     * Upload avec validation MIME et message d'erreur standardise.
+     */
+    public function uploadValidated(array $file, array $allowedMimes, string $type, bool $required = false): array {
+        if (empty($file['tmp_name'])) {
+            return [
+                'success' => !$required,
+                'path' => null,
+                'error' => $required ? 'Le fichier principal est requis.' : null,
+            ];
+        }
+
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+            return [
+                'success' => false,
+                'path' => null,
+                'error' => "Erreur lors de l'envoi du fichier.",
+            ];
+        }
+
+        if (!$this->validateMime($file, $allowedMimes)) {
+            return [
+                'success' => false,
+                'path' => null,
+                'error' => $type === 'media'
+                    ? 'Type de media non autorise (MP3, WAV, OGG, MP4, WEBM acceptes).'
+                    : 'Type de fichier non autorise (JPG, PNG, GIF et PDF acceptes).',
+            ];
+        }
+
+        $uploaded = $this->upload($file, $type);
+        if ($uploaded === null || empty($uploaded['path'])) {
+            return [
+                'success' => false,
+                'path' => null,
+                'error' => "Echec de l'upload du fichier.",
+            ];
+        }
+
+        return [
+            'success' => true,
+            'path' => $uploaded['path'],
+            'error' => null,
+        ];
     }
     
     /**

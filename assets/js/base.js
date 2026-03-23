@@ -1,6 +1,8 @@
 // assets/js/base.js
 
 document.addEventListener('DOMContentLoaded', () => {
+    window.getCsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
+
     // Thème (Mode Sombre)
     const themeToggle = document.getElementById('themeToggle');
     const currentTheme = localStorage.getItem('theme') || 'light';
@@ -28,12 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onclick = (event) => { if (event.target == modal) modal.style.display = 'none'; };
 
     window.openPDF = (url) => {
-        modalBody.innerHTML = `<iframe src="${url}" width="100%" height="600px" style="border:none;"></iframe>`;
+        modalBody.innerHTML = `<iframe src="${url}" class="modal-embed" title="Apercu PDF" style="border:none;"></iframe>`;
         modal.style.display = 'block';
     };
 
     window.openLightbox = (url) => {
-        modalBody.innerHTML = `<img src="${url}" style="width:100%; height:auto; border-radius:4px;">`;
+        modalBody.innerHTML = `<img src="${url}" class="modal-image" alt="Apercu image">`;
         modal.style.display = 'block';
     };
 
@@ -51,10 +53,60 @@ document.addEventListener('DOMContentLoaded', () => {
     // Menu Burger
     const burgerMenu = document.getElementById('burgerMenu');
     const navbarMenu = document.getElementById('navbarMenu');
+    const navbarDropdownButtons = document.querySelectorAll('.navbar-menu .dropbtn');
+    const navbarLinks = document.querySelectorAll('.navbar-menu a');
+
+    const closeMobileMenu = () => {
+        if (!navbarMenu || !burgerMenu) {
+            return;
+        }
+
+        navbarMenu.classList.remove('active');
+        burgerMenu.textContent = '☰';
+        burgerMenu.setAttribute('aria-expanded', 'false');
+
+        navbarDropdownButtons.forEach((button) => {
+            button.setAttribute('aria-expanded', 'false');
+            button.closest('.dropdown')?.querySelector('.dropdown-content')?.classList.remove('mobile-open');
+        });
+    };
 
     burgerMenu?.addEventListener('click', () => {
         navbarMenu.classList.toggle('active');
-        burgerMenu.textContent = navbarMenu.classList.contains('active') ? '✕' : '☰';
+        const isOpen = navbarMenu.classList.contains('active');
+        burgerMenu.textContent = isOpen ? '✕' : '☰';
+        burgerMenu.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    navbarDropdownButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            if (window.innerWidth > 768) {
+                return;
+            }
+
+            const parent = button.closest('.dropdown');
+            const content = parent?.querySelector('.dropdown-content');
+            if (!content) {
+                return;
+            }
+
+            const isOpen = content.classList.toggle('mobile-open');
+            button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+    });
+
+    navbarLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeMobileMenu();
+            }
+        });
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
     });
 
     // Toasts

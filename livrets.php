@@ -3,12 +3,6 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
-use App\Database;
-use App\Project;
-
-$db = new Database();
-$pdo = $db->getPDO();
-
 $currentMonth = date('m');
 $currentYear = date('Y');
 

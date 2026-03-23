@@ -1,24 +1,22 @@
 <?php
 // api/projects/detail.php
-require_once '../../classes/Database.php';
-require_once '../../classes/Project.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
-header('Content-Type: application/json');
+use App\Database;
+use App\ProjectRepository;
 
 if (!isset($_GET['id'])) {
-    echo json_encode(['error' => 'ID manquant']);
-    exit;
+    json_error('ID manquant', 400);
 }
 
 $id = (int) $_GET['id'];
 
 $db = new Database();
-$projectObj = new Project($db->getPDO());
-$project = $projectObj->getProjectById($id);
+$projectRepository = new ProjectRepository($db->getPDO());
+$project = $projectRepository->getById($id);
 
 if ($project) {
-    echo json_encode($project);
+    json_response($project);
 } else {
-    echo json_encode(['error' => 'Projet non trouvé']);
+    json_error('Projet non trouve', 404);
 }
-?>

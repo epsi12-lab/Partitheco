@@ -5,8 +5,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use App\Database;
 
-header('Content-Type: application/json');
-
 $db = new Database();
 $pdo = $db->getPDO();
 
@@ -14,8 +12,7 @@ $query = trim($_GET['q'] ?? '');
 $limit = min((int)($_GET['limit'] ?? 20), 50);
 
 if (strlen($query) < 3) {
-    echo json_encode(['error' => 'La recherche doit contenir au moins 3 caractères', 'results' => []]);
-    exit;
+    json_response(['error' => 'La recherche doit contenir au moins 3 caractères', 'results' => []], 400);
 }
 
 // Recherche dans titre, description (paroles), auteur
@@ -60,7 +57,7 @@ foreach ($results as &$result) {
     unset($result['description']); // Ne pas renvoyer la description complète
 }
 
-echo json_encode([
+json_response([
     'query' => $query,
     'count' => count($results),
     'results' => $results

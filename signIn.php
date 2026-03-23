@@ -5,7 +5,9 @@ session_start();
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/assets/locales/trad.php';
 
+use App\AuthService;
 use App\Database;
+use App\RegistrationService;
 use App\User;
 
 $error = '';
@@ -20,50 +22,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         redirect_error('403', 'Action non autorisée (CSRF).');
     }
-    $firstName        = trim($_POST['first_name'] ?? '');
-    $lastName         = trim($_POST['last_name'] ?? '');
-    $username         = trim($_POST['username']);
-    $email            = trim($_POST['email']);
-    $password         = $_POST['password'] ?? '';
-    $password_confirm = $_POST['password_confirm'] ?? '';
-    $paroisse         = trim($_POST['paroisse'] ?? '');
-    $roleChoral       = trim($_POST['role_choral'] ?? '');
+    $db = new Database();
+    $pdo = $db->getPDO();
+    $registrationService = new RegistrationService(new User($pdo), new AuthService($pdo));
+    $result = $registrationService->registerFromInput($_POST);
 
-    if ($firstName === '') {
-        $error .= "Le prénom est requis.<br>";
-    }
-    if ($lastName === '') {
-        $error .= "Le nom est requis.<br>";
-    }
-    if ($username === '') {
-        $error .= "Le nom d'utilisateur est requis.<br>";
-    }
-    if ($email === '') {
-        $error .= "L'adresse e-mail est requise.<br>";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error .= "L'adresse e-mail n'est pas valide.<br>";
-    }
-    if ($password === '') {
-        $error .= "Le mot de passe est requis.<br>";
-    }
-    if ($password !== $password_confirm) {
-        $error .= "Les mots de passe ne correspondent pas.<br>";
+    $firstName = $result['data']['first_name'];
+    $lastName = $result['data']['last_name'];
+    $username = $result['data']['username'];
+    $email = $result['data']['email'];
+    $paroisse = $result['data']['paroisse'];
+    $roleChoral = $result['data']['role_choral'];
+
+    if ($result['success']) {
+        header('Location: admin.php');
+        exit;
     }
 
-    if ($error === '') {
-        $db      = new Database();
-        $userObj = new User($db->getPDO());
-        try {
-            $userObj->register($username, $email, $password, $firstName, $lastName, $paroisse ?: null, $roleChoral ?: null);
-            $user = $userObj->login($username, $password);
-            if ($user) {
-                $_SESSION['user'] = $user;
-                header('Location: admin.php');
-                exit;
-            }
-        } catch (\Exception $e) {
-            $error .= htmlspecialchars($e->getMessage()) . '<br>';
-        }
+    $error = implode('<br>', array_map('htmlspecialchars', $result['errors']));
+    if ($error !== '') {
+        $error .= '<br>';
     }
 }
 
