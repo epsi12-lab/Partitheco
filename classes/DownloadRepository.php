@@ -1,6 +1,8 @@
 <?php
 // classes/DownloadRepository.php
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;

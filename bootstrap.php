@@ -19,4 +19,17 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost');
 }
 
+// Session centralisée avec des cookies durcis (httponly, samesite, secure en HTTPS).
+// Doit être fait avant tout démarrage de session par ailleurs.
+if (PHP_SAPI !== 'cli' && session_status() !== PHP_SESSION_ACTIVE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+}
+
 apply_security_headers();

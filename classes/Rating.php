@@ -1,6 +1,8 @@
 <?php
 // classes/Rating.php - Système de notation des partitions
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;

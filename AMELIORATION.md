@@ -4,7 +4,7 @@ Ce document dresse la liste des améliorations prévues pour le projet, classée
 
 #### 1. Infrastructure & Migration (MIGRATION_MEMO.md)
 - [x] Migrer le dépôt de GitLab vers GitHub
-- [ ] Passer de SQLite à PostgreSQL (pour Render)
+- [x] Passer de SQLite à PostgreSQL (pour Render) — SQLite entièrement retiré, y compris des tests (PostgreSQL réel via docker-compose/CI)
 - [ ] Configurer Cloudinary pour le stockage des médias (Images/PDF) (À faire en dernier)
 - [x] Implémenter Composer pour la gestion des dépendances
 - [x] Utiliser des variables d'environnement (`.env`) pour les secrets

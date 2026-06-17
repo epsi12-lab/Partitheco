@@ -1,5 +1,7 @@
 ### Mémo de Migration : PARTITHECO (GitLab ➔ GitHub ➔ Render)
 
+> **Statut (mise en conformité production) :** la migration SQLite → PostgreSQL décrite ci-dessous est terminée. SQLite a été retiré entièrement du code, y compris des tests (qui tournent désormais contre un vrai PostgreSQL via `docker-compose` en local et un service Postgres en CI). Ce document est conservé à titre historique.
+
 Ce mémo regroupe toutes les informations nécessaires pour transformer votre projet L2 en une application web moderne, prête pour le déploiement sur **Render**.
 
 ---

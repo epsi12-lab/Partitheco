@@ -1,6 +1,8 @@
 <?php
 // classes/LiturgicalCalendar.php - API Calendrier Liturgique
 
+declare(strict_types=1);
+
 namespace App;
 
 class LiturgicalCalendar {

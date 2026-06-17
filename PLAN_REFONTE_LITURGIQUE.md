@@ -131,8 +131,8 @@ CLOUDINARY_API_SECRET=your_secret
 
 #### 12. Améliorations Avancées (Session 26/02/2026)
 
-- [x] **Notifications push** : `classes/PushNotification.php`, `api/push-subscribe.php`
-- [x] **Recherche par paroles** : `api/search-lyrics.php` avec mise en évidence des termes
+- [ ] ~~**Notifications push**~~ : retirée (mise en conformité production) — l'abonnement était câblé côté serveur mais jamais relié à l'UI, et aucun mécanisme d'envoi réel (VAPID/web-push) n'existait. `classes/PushNotification.php` et `api/push-subscribe.php` ont été supprimés.
+- [x] **Recherche par paroles** : `api/search-lyrics.php` avec mise en évidence des termes, câblée dans l'UI de `publications.php` (mise en conformité production)
 - [x] **API Calendrier liturgique** : `classes/LiturgicalCalendar.php`, `api/liturgical-calendar.php`
   - Calcul automatique de Pâques (algorithme Meeus/Jones/Butcher)
   - Détermination du temps liturgique pour toute date

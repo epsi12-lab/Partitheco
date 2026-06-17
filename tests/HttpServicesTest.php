@@ -17,7 +17,7 @@ return function (): void {
         session_destroy();
     }
 
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
     createProjectInteractionSchema($pdo);
 
@@ -55,7 +55,7 @@ return function (): void {
     assertFalse($failure['success'], 'L inscription invalide doit echouer');
     assertTrue(count($failure['errors']) >= 4, 'Les erreurs d inscription doivent etre remontees');
 
-    $playlistImport = new PlaylistImportService(new PlaylistRepository($pdo), new ProjectRepository($pdo));
+    $playlistImport = new PlaylistImportService($pdo, new PlaylistRepository($pdo), new ProjectRepository($pdo));
     $importResult = $playlistImport->importFromJsonPayload(2, json_encode([
         'name' => 'Import auto',
         'description' => 'Depuis JSON',

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\PlaylistPageService;
 
 return function (): void {
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
     createProjectInteractionSchema($pdo);
 

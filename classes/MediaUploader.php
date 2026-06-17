@@ -1,14 +1,37 @@
 <?php
 // classes/MediaUploader.php - Gestion unifiée des uploads (local ou Cloudinary)
 
+declare(strict_types=1);
+
 namespace App;
 
 class MediaUploader {
     private ?Cloudinary $cloudinary = null;
     private string $localPath = 'assets/img/';
-    
+
+    private const EXTENSION_BY_MIME = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'application/pdf' => 'pdf',
+        'audio/mpeg' => 'mp3',
+        'audio/wav' => 'wav',
+        'audio/x-wav' => 'wav',
+        'audio/ogg' => 'ogg',
+        'video/mp4' => 'mp4',
+        'video/webm' => 'webm',
+        'video/ogg' => 'ogv',
+    ];
+
     public function __construct() {
         $this->cloudinary = new Cloudinary();
+    }
+
+    /**
+     * Dossier de destination absolu pour les uploads locaux (indépendant du cwd d'exécution).
+     */
+    private function localDir(): string {
+        return dirname(__DIR__) . '/public/' . $this->localPath;
     }
     
     /**
@@ -55,18 +78,22 @@ class MediaUploader {
      * Upload local (fallback)
      */
     private function uploadLocal(array $file): ?array {
-        $filename = time() . '_' . bin2hex(random_bytes(8)) . '_' . basename($file['name']);
-        $targetPath = $this->localPath . $filename;
-        
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($file['tmp_name']);
+        $ext = self::EXTENSION_BY_MIME[$mime] ?? 'bin';
+
+        $filename = time() . '_' . bin2hex(random_bytes(8)) . '.' . $ext;
+        $targetPath = $this->localDir() . $filename;
+
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             return [
                 'path' => $filename,
                 'public_id' => null,
                 'type' => 'local',
-                'format' => pathinfo($file['name'], PATHINFO_EXTENSION)
+                'format' => $ext,
             ];
         }
-        
+
         return null;
     }
     
@@ -80,7 +107,7 @@ class MediaUploader {
         }
         
         // Suppression locale
-        $fullPath = $this->localPath . $path;
+        $fullPath = $this->localDir() . basename($path);
         if (file_exists($fullPath)) {
             return unlink($fullPath);
         }
@@ -101,34 +128,29 @@ class MediaUploader {
         return $this->localPath . $path;
     }
     
+    private const VIDEO_AND_AUDIO_EXTENSIONS = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mp3', 'wav', 'oga', 'flac'];
+
     /**
-     * Déterminer le type de ressource Cloudinary
+     * Déterminer le type de ressource Cloudinary à partir d'un nom de fichier
      */
     private function getResourceType(string $filename): string {
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-        if (in_array($ext, ['mp4', 'webm', 'ogg', 'mov', 'avi'])) {
-            return 'video';
-        }
-        
-        if (in_array($ext, ['mp3', 'wav', 'ogg', 'oga', 'flac'])) {
-            return 'video'; // Cloudinary traite l'audio comme vidéo
-        }
-        
-        if ($ext === 'pdf') {
-            return 'raw';
-        }
-        
-        return 'image';
+        return $this->resourceTypeForExtension(pathinfo($filename, PATHINFO_EXTENSION));
     }
-    
+
     /**
-     * Déterminer le type de ressource depuis le chemin
+     * Déterminer le type de ressource Cloudinary à partir d'un chemin
      */
     private function getResourceTypeFromPath(string $path): string {
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        
-        if (in_array($ext, ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mp3', 'wav', 'oga', 'flac'])) {
+        return $this->resourceTypeForExtension(pathinfo($path, PATHINFO_EXTENSION));
+    }
+
+    /**
+     * Cloudinary traite l'audio comme de la vidéo, d'où le regroupement video+audio.
+     */
+    private function resourceTypeForExtension(string $extension): string {
+        $ext = strtolower($extension);
+
+        if (in_array($ext, self::VIDEO_AND_AUDIO_EXTENSIONS, true)) {
             return 'video';
         }
         
@@ -150,7 +172,7 @@ class MediaUploader {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($file['tmp_name']);
         
-        return in_array($mime, $allowedMimes);
+        return in_array($mime, $allowedMimes, true);
     }
 
     /**

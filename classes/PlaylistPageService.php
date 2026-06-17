@@ -1,15 +1,19 @@
 <?php
 // classes/PlaylistPageService.php
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;
 
 class PlaylistPageService {
+    private PDO $pdo;
     private PlaylistRepository $playlistRepository;
     private ProjectRepository $projectRepository;
 
     public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
         $this->playlistRepository = new PlaylistRepository($pdo);
         $this->projectRepository = new ProjectRepository($pdo);
     }
@@ -66,33 +70,24 @@ class PlaylistPageService {
             return ['imported' => 0, 'not_found' => 0];
         }
 
-        foreach ($importData['items'] as $item) {
-            $project = $this->resolveProject($item);
-            if ($project) {
-                $this->playlistRepository->addItem($playlistId, (int) $project['id'], $this->normalizeNote($item['note'] ?? null));
-                $importedCount++;
-            } else {
-                $notFoundCount++;
+        $this->pdo->beginTransaction();
+        try {
+            foreach ($importData['items'] as $item) {
+                $project = $this->projectRepository->resolveByIdOrTitle((array) $item);
+                if ($project) {
+                    $this->playlistRepository->addItem($playlistId, (int) $project['id'], $this->normalizeNote($item['note'] ?? null));
+                    $importedCount++;
+                } else {
+                    $notFoundCount++;
+                }
             }
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
         }
 
         return ['imported' => $importedCount, 'not_found' => $notFoundCount];
-    }
-
-    private function resolveProject(array $item): ?array {
-        if (!empty($item['project_id'])) {
-            $project = $this->projectRepository->getById((int) $item['project_id']);
-            if ($project) {
-                return $project;
-            }
-        }
-
-        if (!empty($item['title'])) {
-            $results = $this->projectRepository->search($item['title']);
-            return $results[0] ?? null;
-        }
-
-        return null;
     }
 
     private function normalizeNote(?string $note): ?string {

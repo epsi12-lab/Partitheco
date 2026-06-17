@@ -12,6 +12,8 @@ $tests = [
     'PlaylistPageServiceTest' => require __DIR__ . '/PlaylistPageServiceTest.php',
     'HttpServicesTest' => require __DIR__ . '/HttpServicesTest.php',
     'ContactFormServiceTest' => require __DIR__ . '/ContactFormServiceTest.php',
+    'CsrfTest' => require __DIR__ . '/CsrfTest.php',
+    'MediaUploaderTest' => require __DIR__ . '/MediaUploaderTest.php',
 ];
 
 $failures = 0;

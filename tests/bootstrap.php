@@ -33,16 +33,41 @@ function assertNotEmptyValue(mixed $value, string $message): void {
     }
 }
 
-function createSqliteMemoryPdo(): PDO {
-    $pdo = new PDO('sqlite::memory:');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+/**
+ * Connexion PostgreSQL partagée pour les tests, réutilisée d'un test à l'autre.
+ * Les identifiants pointent vers une base de test jetable (docker-compose en local, service CI en pipeline).
+ */
+function getTestPdo(): PDO {
+    static $pdo = null;
+    if ($pdo === null) {
+        $host = $_ENV['TEST_DB_HOST'] ?? getenv('TEST_DB_HOST') ?: 'localhost';
+        $port = $_ENV['TEST_DB_PORT'] ?? getenv('TEST_DB_PORT') ?: '5432';
+        $name = $_ENV['TEST_DB_NAME'] ?? getenv('TEST_DB_NAME') ?: 'partitheco_test';
+        $user = $_ENV['TEST_DB_USER'] ?? getenv('TEST_DB_USER') ?: 'postgres';
+        $pass = $_ENV['TEST_DB_PASS'] ?? getenv('TEST_DB_PASS') ?: 'postgres';
+
+        $pdo = new PDO("pgsql:host={$host};port={$port};dbname={$name}", $user, $pass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    return $pdo;
+}
+
+/**
+ * Repart d'un schéma vide avant chaque suite de tests, pour reproduire l'isolation
+ * qu'offrait auparavant une base SQLite en mémoire par test (les ID auto-incrémentés
+ * repartent de 1, comme attendu par les assertions des tests).
+ */
+function createTestPdo(): PDO {
+    $pdo = getTestPdo();
+    $pdo->exec('DROP SCHEMA IF EXISTS public CASCADE');
+    $pdo->exec('CREATE SCHEMA public');
     return $pdo;
 }
 
 function createCoreSchema(PDO $pdo): void {
     $pdo->exec("
         CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             username TEXT NOT NULL UNIQUE,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
@@ -55,7 +80,7 @@ function createCoreSchema(PDO $pdo): void {
 
     $pdo->exec("
         CREATE TABLE projects (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             title TEXT NOT NULL,
             description TEXT NOT NULL,
@@ -69,7 +94,7 @@ function createCoreSchema(PDO $pdo): void {
             temps_liturgique TEXT NULL,
             is_liturgical INTEGER DEFAULT 0,
             voix TEXT NULL,
-            date_publication DATETIME DEFAULT CURRENT_TIMESTAMP
+            date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 }
@@ -77,11 +102,11 @@ function createCoreSchema(PDO $pdo): void {
 function createProjectInteractionSchema(PDO $pdo): void {
     $pdo->exec("
         CREATE TABLE comments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             project_id INTEGER NOT NULL,
             author TEXT NOT NULL,
             content TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 
@@ -89,48 +114,48 @@ function createProjectInteractionSchema(PDO $pdo): void {
         CREATE TABLE favorites (
             user_id INTEGER NOT NULL,
             project_id INTEGER NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(user_id, project_id)
         )
     ");
 
     $pdo->exec("
         CREATE TABLE ratings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             project_id INTEGER NOT NULL,
             score INTEGER NOT NULL,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(user_id, project_id)
         )
     ");
 
     $pdo->exec("
         CREATE TABLE downloads (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             project_id INTEGER NOT NULL,
             user_id INTEGER NULL,
             ip_address TEXT NOT NULL,
             file_type TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 
     $pdo->exec("
         CREATE TABLE playlists (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             name TEXT NOT NULL,
             description TEXT NULL,
             event_date TEXT NULL,
             share_token TEXT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 
     $pdo->exec("
         CREATE TABLE playlist_items (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             playlist_id INTEGER NOT NULL,
             project_id INTEGER NOT NULL,
             note TEXT NULL,

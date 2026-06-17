@@ -1,6 +1,8 @@
 <?php
 // classes/UserRepository.php
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;
@@ -123,27 +125,13 @@ class UserRepository {
     }
 
     public function initRememberTokensTable(): void {
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql') {
-            $this->pdo->exec("
-                CREATE TABLE IF NOT EXISTS remember_tokens (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL REFERENCES users(id),
-                    token_hash TEXT NOT NULL UNIQUE,
-                    expires_at TIMESTAMP NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ");
-            return;
-        }
-
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS remember_tokens (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id),
                 token_hash TEXT NOT NULL UNIQUE,
-                expires_at DATETIME NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY(user_id) REFERENCES users(id)
+                expires_at TIMESTAMP NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ");
     }

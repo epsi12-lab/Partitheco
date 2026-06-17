@@ -8,7 +8,7 @@ use App\ProjectPageService;
 use App\ProjectRepository;
 
 return function (): void {
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
     createProjectInteractionSchema($pdo);
 

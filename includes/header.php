@@ -1,7 +1,7 @@
 <?php
 // includes/header.php
 
-require_once __DIR__ . '/../assets/locales/trad.php';
+require_once __DIR__ . '/../lang/trad.php';
 
 ?>
 

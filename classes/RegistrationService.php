@@ -1,6 +1,8 @@
 <?php
 // classes/RegistrationService.php
 
+declare(strict_types=1);
+
 namespace App;
 
 class RegistrationService {
@@ -42,6 +44,8 @@ class RegistrationService {
         }
         if ($data['password'] === '') {
             $errors[] = 'Le mot de passe est requis.';
+        } elseif (strlen($data['password']) < 8) {
+            $errors[] = 'Le mot de passe doit contenir au moins 8 caractères.';
         }
         if ($data['password'] !== $data['password_confirm']) {
             $errors[] = 'Les mots de passe ne correspondent pas.';
@@ -69,9 +73,10 @@ class RegistrationService {
 
             return ['success' => $user !== false, 'errors' => [], 'data' => $data, 'user' => $user ?: null];
         } catch (\Throwable $e) {
+            error_log('Registration error: ' . $e->getMessage());
             return [
                 'success' => false,
-                'errors' => [$e->getMessage()],
+                'errors' => ["Une erreur est survenue lors de l'inscription. Veuillez réessayer."],
                 'data' => $data,
                 'user' => null,
             ];

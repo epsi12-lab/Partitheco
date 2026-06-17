@@ -8,6 +8,21 @@ jobs:
   php-checks:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: partitheco_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,6 +31,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+          extensions: pdo, pdo_pgsql
 
       - name: Validate Composer
         run: composer validate --no-check-publish
@@ -23,8 +39,17 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Security audit
+        run: composer audit
+
       - name: Lint
         run: composer lint
 
       - name: Tests
+        env:
+          TEST_DB_HOST: localhost
+          TEST_DB_PORT: 5432
+          TEST_DB_NAME: partitheco_test
+          TEST_DB_USER: postgres
+          TEST_DB_PASS: postgres
         run: composer test

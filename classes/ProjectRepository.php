@@ -1,6 +1,8 @@
 <?php
 // classes/ProjectRepository.php
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;
@@ -88,6 +90,26 @@ class ProjectRepository {
         return $result ?: null;
     }
 
+    /**
+     * Résout un projet à partir d'un item d'import/playlist : par project_id en priorité,
+     * sinon par recherche du titre (premier résultat).
+     */
+    public function resolveByIdOrTitle(array $item): ?array {
+        if (!empty($item['project_id'])) {
+            $project = $this->getById((int) $item['project_id']);
+            if ($project) {
+                return $project;
+            }
+        }
+
+        if (!empty($item['title'])) {
+            $results = $this->search((string) $item['title']);
+            return $results[0] ?? null;
+        }
+
+        return null;
+    }
+
     public function updateByUser(
         int $projectId,
         int $userId,
@@ -170,12 +192,11 @@ class ProjectRepository {
     }
 
     public function search(string $query, ?string $moment = null, ?string $temps = null, ?string $voix = null): array {
-        $likeOperator = $this->isPostgres() ? 'ILIKE' : 'LIKE';
         $sql = "
             SELECT p.*, u.username
             FROM projects p
             JOIN users u ON p.user_id = u.id
-            WHERE (p.title {$likeOperator} :q OR p.description {$likeOperator} :q)
+            WHERE (p.title ILIKE :q OR p.description ILIKE :q)
         ";
 
         $params = [':q' => '%' . $query . '%'];
@@ -238,9 +259,5 @@ class ProjectRepository {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    private function isPostgres(): bool {
-        return $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql';
     }
 }

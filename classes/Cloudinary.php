@@ -1,6 +1,8 @@
 <?php
 // classes/Cloudinary.php - Gestion du stockage Cloudinary
 
+declare(strict_types=1);
+
 namespace App;
 
 class Cloudinary {

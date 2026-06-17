@@ -8,46 +8,46 @@ use App\PlaylistSharingService;
 use App\RatingRepository;
 
 return function (): void {
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
 
     $pdo->exec("
         CREATE TABLE ratings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             project_id INTEGER NOT NULL,
             score INTEGER NOT NULL,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(user_id, project_id)
         )
     ");
 
     $pdo->exec("
         CREATE TABLE downloads (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             project_id INTEGER NOT NULL,
             user_id INTEGER NULL,
             ip_address TEXT NOT NULL,
             file_type TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 
     $pdo->exec("
         CREATE TABLE playlists (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             name TEXT NOT NULL,
             description TEXT NULL,
             event_date TEXT NULL,
             share_token TEXT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
 
     $pdo->exec("
         CREATE TABLE playlist_items (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             playlist_id INTEGER NOT NULL,
             project_id INTEGER NOT NULL,
             note TEXT NULL,

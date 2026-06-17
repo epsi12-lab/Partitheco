@@ -1,6 +1,8 @@
 <?php
 // classes/PlaylistRepository.php
 
+declare(strict_types=1);
+
 namespace App;
 
 use PDO;
@@ -13,24 +15,10 @@ class PlaylistRepository {
     }
 
     public function create(int $userId, string $name, ?string $description = null, ?string $eventDate = null): int {
-        if ($this->isPostgres()) {
-            $stmt = $this->pdo->prepare("
-                INSERT INTO playlists (user_id, name, description, event_date)
-                VALUES (:uid, :name, :desc, :date)
-                RETURNING id
-            ");
-            $stmt->execute([
-                ':uid' => $userId,
-                ':name' => $name,
-                ':desc' => $description,
-                ':date' => $eventDate,
-            ]);
-            return (int) $stmt->fetchColumn();
-        }
-
         $stmt = $this->pdo->prepare("
             INSERT INTO playlists (user_id, name, description, event_date)
             VALUES (:uid, :name, :desc, :date)
+            RETURNING id
         ");
         $stmt->execute([
             ':uid' => $userId,
@@ -38,8 +26,7 @@ class PlaylistRepository {
             ':desc' => $description,
             ':date' => $eventDate,
         ]);
-
-        return (int) $this->pdo->lastInsertId();
+        return (int) $stmt->fetchColumn();
     }
 
     public function getByUser(int $userId): array {
@@ -136,20 +123,25 @@ class PlaylistRepository {
     }
 
     public function delete(int $playlistId, int $userId): bool {
-        $this->pdo->prepare("DELETE FROM playlist_items WHERE playlist_id = :plid")
-            ->execute([':plid' => $playlistId]);
+        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->prepare("DELETE FROM playlist_items WHERE playlist_id = :plid")
+                ->execute([':plid' => $playlistId]);
 
-        $stmt = $this->pdo->prepare("
-            DELETE FROM playlists
-            WHERE id = :id AND user_id = :uid
-        ");
-        return $stmt->execute([
-            ':id' => $playlistId,
-            ':uid' => $userId,
-        ]);
-    }
+            $stmt = $this->pdo->prepare("
+                DELETE FROM playlists
+                WHERE id = :id AND user_id = :uid
+            ");
+            $deleted = $stmt->execute([
+                ':id' => $playlistId,
+                ':uid' => $userId,
+            ]);
 
-    private function isPostgres(): bool {
-        return $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql';
+            $this->pdo->commit();
+            return $deleted;
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 }

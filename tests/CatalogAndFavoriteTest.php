@@ -15,9 +15,9 @@ return function (): void {
     assertSame('avent', $temps[0]['slug'], 'Le premier temps liturgique doit etre avent');
     assertSame('Noël', LiturgicalCalendar::getSeason(new DateTime('2026-12-25')), 'Le 25 decembre doit etre en temps de Noel');
 
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
-    $pdo->exec("CREATE TABLE favorites (user_id INTEGER NOT NULL, project_id INTEGER NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(user_id, project_id))");
+    $pdo->exec("CREATE TABLE favorites (user_id INTEGER NOT NULL, project_id INTEGER NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(user_id, project_id))");
 
     $pdo->exec("INSERT INTO users (username, email, password, first_name, last_name) VALUES ('paul', 'paul@example.test', 'x', 'Paul', 'Martin')");
     $pdo->exec("INSERT INTO users (username, email, password, first_name, last_name) VALUES ('anne', 'anne@example.test', 'x', 'Anne', 'Bernard')");

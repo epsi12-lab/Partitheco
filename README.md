@@ -22,7 +22,7 @@ Plateforme web de partitions musicales liturgiques, inspirée de "Chantons en É
 | Composant | Technologie |
 |-----------|-------------|
 | **Backend** | PHP natif (PSR-4 autoloading via Composer) |
-| **Base de données** | PostgreSQL (Supabase) / SQLite (local) |
+| **Base de données** | PostgreSQL (Supabase en prod, conteneur Docker en local) |
 | **Hébergement** | Render |
 | **Médias** | Cloudinary |
 | **Frontend** | HTML5, CSS3, JavaScript vanilla |
@@ -72,20 +72,26 @@ composer install
 cp .env.example .env
 # Éditer .env avec vos paramètres
 
+# Démarrer une base PostgreSQL locale (Docker requis)
+docker compose up -d db
+php scripts/migrate.php
+
 # Vérifier le projet
 composer lint
 composer test
 
-# Lancer le serveur
-php -S localhost:8000
+# Lancer le serveur (le webroot est public/)
+php -S localhost:8000 -t public
 ```
+
+PostgreSQL est requis même en local : il n'y a plus de mode SQLite de secours. `docker-compose.yml` fournit un service `db` prêt à l'emploi pour le développement, et un service `db-test` dédié à `composer test`.
 
 ### Variables d'environnement
 
 ```env
 BASE_URL=http://localhost:8000
 
-# Base de données (PostgreSQL pour production)
+# Base de données PostgreSQL (obligatoire, y compris en local)
 DB_HOST=aws-1-eu-west-1.pooler.supabase.com
 DB_PORT=5432
 DB_NAME=postgres
@@ -108,8 +114,9 @@ CONTENT_SECURITY_POLICY=
 # Vérification syntaxique de tout le projet
 composer lint
 
-# Tests locaux
-composer test
+# Tests locaux (nécessitent une base PostgreSQL de test)
+docker compose up -d db-test
+TEST_DB_HOST=localhost TEST_DB_PORT=5434 TEST_DB_USER=postgres TEST_DB_PASS=postgres TEST_DB_NAME=partitheco_test composer test
 ```
 
 ---
@@ -118,21 +125,22 @@ composer test
 
 ```
 Partitheco/
-├── .github/workflows/   # CI GitHub Actions
-├── api/                 # Endpoints JSON
-├── assets/
-│   ├── css/            # Styles (thème liturgique)
-│   ├── js/             # Scripts
-│   ├── locales/        # Traductions (fr, en)
-│   └── static/         # Images statiques
-├── classes/            # Classes PHP (repositories, services, modeles)
-├── includes/           # Composants (navbar, footer)
-├── scripts/            # Outils de verification locaux
-├── tests/              # Runner et tests locaux
-├── vendor/             # Dépendances Composer
-├── bootstrap.php       # Initialisation
-├── index.php           # Page d'accueil
-└── Dockerfile          # Configuration Docker
+├── public/              # Webroot — seul ce dossier est exposé par Apache
+│   ├── index.php, login.php, ...  # Pages
+│   ├── api/             # Endpoints JSON
+│   └── assets/
+│       ├── css/        # Styles (thème liturgique)
+│       ├── js/         # Scripts
+│       └── static/     # Images statiques
+├── lang/                # Traductions (fr, en) — hors webroot, jamais appelé par URL
+├── classes/             # Classes PHP (repositories, services, modeles)
+├── includes/            # Composants (navbar, footer, sécurité, auth)
+├── scripts/             # Outils CLI uniquement (lint, migrate, reset_db — jamais exposés en HTTP)
+├── tests/               # Runner et tests locaux (PostgreSQL réel)
+├── vendor/              # Dépendances Composer
+├── bootstrap.php        # Initialisation
+├── docker-compose.yml   # Environnement de dev/test local (Postgres inclus)
+└── Dockerfile           # Configuration Docker (DocumentRoot = public/)
 ```
 
 ---

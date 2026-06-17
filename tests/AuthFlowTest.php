@@ -11,7 +11,7 @@ return function (): void {
         session_destroy();
     }
 
-    $pdo = createSqliteMemoryPdo();
+    $pdo = createTestPdo();
     createCoreSchema($pdo);
 
     $user = new User($pdo);
