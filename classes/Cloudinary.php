@@ -12,9 +12,23 @@ class Cloudinary {
     private string $uploadPreset;
     
     public function __construct() {
-        $this->cloudName = $_ENV['CLOUDINARY_CLOUD_NAME'] ?? '';
-        $this->apiKey = $_ENV['CLOUDINARY_API_KEY'] ?? '';
-        $this->apiSecret = $_ENV['CLOUDINARY_API_SECRET'] ?? '';
+        $cloudName = $_ENV['CLOUDINARY_CLOUD_NAME'] ?? '';
+        $apiKey = $_ENV['CLOUDINARY_API_KEY'] ?? '';
+        $apiSecret = $_ENV['CLOUDINARY_API_SECRET'] ?? '';
+
+        // Permet aussi la variable combinée standard CLOUDINARY_URL
+        // (cloudinary://<api_key>:<api_secret>@<cloud_name>) si les variables
+        // séparées ne sont pas définies.
+        if (($cloudName === '' || $apiKey === '' || $apiSecret === '') && !empty($_ENV['CLOUDINARY_URL'])) {
+            $parsed = parse_url($_ENV['CLOUDINARY_URL']);
+            $cloudName = $cloudName !== '' ? $cloudName : ($parsed['host'] ?? '');
+            $apiKey = $apiKey !== '' ? $apiKey : ($parsed['user'] ?? '');
+            $apiSecret = $apiSecret !== '' ? $apiSecret : ($parsed['pass'] ?? '');
+        }
+
+        $this->cloudName = $cloudName;
+        $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
         $this->uploadPreset = $_ENV['CLOUDINARY_UPLOAD_PRESET'] ?? 'partitheco';
     }
     
